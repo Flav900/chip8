@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Chip8;
 using SDL2;
 
 namespace Chip8
@@ -95,14 +96,46 @@ namespace Chip8
         void Render()
         {
             // Sets the color that the screen will be cleared with.
-            SDL.SDL_SetRenderDrawColor(renderer, 135, 206, 235, 255);
+            SDL.SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 
             // Clears the current render surface.
             SDL.SDL_RenderClear(renderer);
 
-            // Switches out the currently presented render surface with the one we just did work on.
-            SDL.SDL_RenderPresent(renderer);
-        }
+
+
+			/* sdl fun
+		
+
+			// Set the color to red before drawing our shape
+			SDL.SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+
+			// Draws a point at (20, 20) using the currently set color.
+			SDL.SDL_RenderDrawPoint(renderer, 20, 20);
+
+
+			// Draw a line from top left to bottom right
+			SDL.SDL_RenderDrawLine(renderer, 0, 0, 640, 480);
+
+			// Specify the coordinates for our rectangle we will be drawing.
+			var rect = new SDL.SDL_Rect
+			{
+				x = 300,
+				y = 100,
+				w = 50,
+				h = 50
+			};
+
+			// Draw a filled in rectangle.
+			SDL.SDL_RenderFillRect(renderer, ref rect);
+            */
+
+
+			// Switches out the currently presented render surface with the one we just did work on.
+			SDL.SDL_RenderPresent(renderer);
+
+
+    
+		}
 
 
         /// <summary>
@@ -117,8 +150,11 @@ namespace Chip8
 
         static void Main(string[] args)
         {
-            new Program();
-        }
+
+
+            new FileRead();
+		//	new Program();
+		}
 
      }
 }
