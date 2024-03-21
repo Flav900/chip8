@@ -8,5 +8,6 @@ namespace Chip8
 {
 	internal class Chip8Core
 	{
+
 	}
 }
