@@ -1,8 +1,8 @@
 # Chip8
-A Chip8 emulator I made in C# and SDL2.
+A Chip-8 interpreter I made in C# and SDL2.
 
 
 
 # Credits<br/>
-Jeremy Sayers, C# SDL setup and Tutorials: https://jsayers.dev/tutorials/
+Jeremy Sayers, C# SDL2 setup and Tutorials: https://jsayers.dev/tutorials/
 
