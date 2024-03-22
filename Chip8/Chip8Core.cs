@@ -170,7 +170,7 @@ namespace Chip8
 					int y = Int32.Parse(opCode.Substring(2, 1));
 					char n = opCode[3];
 
-					Console.WriteLine("Draw " + n + " at x:" + x + ", y:" + y);
+					Console.WriteLine("Draw " + ((n=='F')?"White":"Black") + " at x:" + x + ", y:" + y);
 
 
 					display[x, y] = n;
@@ -215,8 +215,13 @@ namespace Chip8
 
 		}
 
+		public char[,] getDisplay()
+		{
+			return display;
+		}
 
-		void clearScreen()
+
+		public void clearScreen()
 		{
 			for (int i = 0; i < display.GetLength(0); i++)
 			{

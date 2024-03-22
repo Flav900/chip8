@@ -16,12 +16,18 @@ namespace Chip8
         IntPtr renderer;
         bool running = true;
 
+        Chip8Core chip8 = new Chip8Core();
+
         Program()
         {
             Setup();
+            chip8.init();
 
             while (running)
             {
+              
+                chip8.doCycle();
+
                 PollEvents();
                 Render();
             }
@@ -103,7 +109,35 @@ namespace Chip8
 
 
 
-			/* sdl fun
+
+
+            char[,] display = chip8.getDisplay();
+
+            for (int i = 0; i < display.GetLength(0); i++)
+            {
+                for (int j = 0; j < display.GetLength(1); j++)
+                {
+
+                    //off/0 is black
+                   if(display[i, j] == '0') {
+
+                        SDL.SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+                        
+
+                    } else if (display[i, j] == 'F')
+                    {
+                        SDL.SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
+
+                    }
+
+
+                    SDL.SDL_RenderDrawPoint(renderer, i, j);
+
+
+                }
+            }
+
+            /* sdl fun
 		
 
 			// Set the color to red before drawing our shape
@@ -130,8 +164,8 @@ namespace Chip8
             */
 
 
-			// Switches out the currently presented render surface with the one we just did work on.
-			SDL.SDL_RenderPresent(renderer);
+            // Switches out the currently presented render surface with the one we just did work on.
+            SDL.SDL_RenderPresent(renderer);
 
 
     
@@ -151,11 +185,11 @@ namespace Chip8
         static void Main(string[] args)
         {
 
+            new Program();
+            //  new FileRead();
 
-           //  new FileRead();
-            //	new Program();
-           new TextOnly();
-		}
+            //  new TextOnly();
+        }
 
      }
 }
