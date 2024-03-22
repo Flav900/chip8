@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Chip8
@@ -12,7 +13,7 @@ namespace Chip8
 		//ushort = unsigned short
 
 
-		ushort opCode;
+	//	ushort opCode;
 		ushort index;
 		ushort programCounter = 0;
 
@@ -21,12 +22,12 @@ namespace Chip8
 		byte[] cpuRegisters = new byte[16];//V
 
 		ushort[] stack = new ushort[16];
-		byte stackPosition;
+		byte stackPosition = 0;
 
 
-		//	char[] display = new char[64 * 32]; //or 128 * 64
+		//ushort[] display = new ushort[64 * 32]; //or 128 * 64
 
-		ushort[,] display = new ushort[64,32]; //1 or 0, black or white
+	    char[,] display = new char[64,32]; //1 or 0, black or white
 
 
 
@@ -36,10 +37,16 @@ namespace Chip8
 
 		}
 
+
+		//Regex is nice but I think its too complex for this
+		//Regex setIndexRegisterRegex = new Regex(@"^A[0-9A-F]{3}$", RegexOptions.IgnoreCase);
+		//	else if (setIndexRegisterRegex.IsMatch(hexString)) {
+
 		public void doCycle()
 		{
 			//Fetch
-			byte[] chunk = { memory[programCounter], memory[programCounter+1] };
+			byte[] chunk = { memory[programCounter], memory[programCounter + 1] };
+			bool jumped = false;
 
 
 			// Convert it to Big Endian if its in little endian, should fix read bug
@@ -48,23 +55,106 @@ namespace Chip8
 				Array.Reverse(chunk);
 			}
 
-			int value = BitConverter.ToUInt16(chunk, 0);
-			string hexString = value.ToString("X4"); // "X4" for 4 digits
+			string opCode = BitConverter.ToUInt16(chunk, 0).ToString("X4"); // "X4" for 4 digits
 
-			Console.WriteLine(hexString);
-		
+			Console.WriteLine(opCode);
+
 
 			//Decode
 
-			switch(hexString)
-			{
-				case "00E0":
-					Console.WriteLine("Clearing Screen");
+			if (opCode.Equals("00E0")) {
+				Console.WriteLine("Clearing Screen");
+				clearScreen();
+			} 
+			else if (opCode.StartsWith("A")) {
+			
 
-					//Execute
+				string nnn = opCode.Substring(1);
 
-					break;
+				Console.WriteLine("Set Index to "+nnn);
+
+				index = (ushort)Convert.ToInt32(nnn, 16);
+
 			}
+			else if (opCode.StartsWith("1"))
+			{
+				//Set the PC to nnn
+				string nnn = opCode.Substring(1);
+
+				Console.WriteLine("Set the Program Counter to "+nnn);
+			
+				programCounter = (ushort)Convert.ToInt32(nnn, 16);
+				jumped = true;
+
+			}
+			else if (opCode.StartsWith("6"))
+			{
+				int x = Int32.Parse(opCode.Substring(1,1));
+
+				string nn = opCode.Substring(2);
+
+				Console.WriteLine("Set Cpu Register " + x +" to "+ nn);
+
+				//set register VX
+				cpuRegisters[x] = Convert.ToByte(nn, 16);
+
+
+			}
+			else if (opCode.StartsWith("7"))
+			{
+				//add value to register VX
+				int x = Int32.Parse(opCode.Substring(1, 1));
+
+				string nn = opCode.Substring(2);
+
+
+				Console.WriteLine("Add "+ nn+" to Cpu Register " + x);
+
+				int sum = cpuRegisters[x] + Convert.ToByte(nn, 16);
+
+				Console.WriteLine("sum " + sum);
+
+				//need to check what happens when overflow is detected
+				if (sum > 255)
+				{
+
+					Console.WriteLine("Overflow");
+			
+					sum = sum % 256; //wraps around it, for now
+
+				}
+
+				cpuRegisters[x] = (byte)sum;
+
+
+			}
+			else if (opCode.StartsWith("D"))
+			{
+				//Draw
+				int x = Int32.Parse(opCode.Substring(1, 1));
+				int y = Int32.Parse(opCode.Substring(2, 1));
+				char n =  opCode[3];
+
+				Console.WriteLine("Draw " + n + " at x:"+x+", y:"+y);
+
+
+				display[x,y] = n;
+
+			}
+			else
+			{
+				Console.WriteLine("Unknown opCode: "+ opCode);
+			}
+
+
+
+
+			if (!jumped)
+			{
+
+				programCounter += 2;
+			}
+
 
 
 			Console.ReadLine();
@@ -78,6 +168,18 @@ namespace Chip8
 
 			memory = File.ReadAllBytes(filePath);
 
+		}
+
+
+		void clearScreen()
+		{
+			for (int i = 0; i < display.GetLength(0); i++)
+			{
+				for (int j = 0; j < display.GetLength(1); j++) 
+				{
+					display[i, j] = '0';
+				}
+			}
 		}
 
 	}

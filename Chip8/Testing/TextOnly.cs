@@ -14,7 +14,12 @@ namespace Chip8
 	public TextOnly()
 		{
 			chip8.init();
-			chip8.doCycle();
+
+			for (; ; ) {
+				chip8.doCycle();
+			}
+
+
 		}
 
 
