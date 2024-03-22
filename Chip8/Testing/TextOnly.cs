@@ -8,28 +8,15 @@ namespace Chip8
 {
 	internal class TextOnly
 	{
+
+	Chip8Core chip8 = new Chip8Core();
+
 	public TextOnly()
 		{
-			Fetch();
-			Decode();
-			Execute();
+			chip8.init();
+			chip8.doCycle();
 		}
 
 
-		void Fetch()
-		{
-
-		}
-
-
-		void Decode()
-		{
-			//switch case here
-		}
-
-		void Execute()
-		{
-
-		}
 	}
 }

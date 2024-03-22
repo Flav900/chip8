@@ -152,8 +152,9 @@ namespace Chip8
         {
 
 
-            new FileRead();
-		//	new Program();
+           //  new FileRead();
+            //	new Program();
+           new TextOnly();
 		}
 
      }
