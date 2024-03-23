@@ -29,7 +29,14 @@ namespace Chip8
                 chip8.doCycle();
 
                 PollEvents();
-                Render();
+
+                //if(chip8.CanDraw)
+               // {
+					Render();
+                //    chip8.CanDraw = false;
+				//}
+
+             
             }
 
             CleanUp();

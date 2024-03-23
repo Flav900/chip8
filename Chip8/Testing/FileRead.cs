@@ -21,7 +21,7 @@ namespace Chip8
 			// little endian is right to left 
 			//chip 8 reads 2 bytes in at a time
 
-			string filePath = "G:/Projects/Chip8/IBM_Logo.ch8";
+			string filePath = "C:/Projects/Chip8/IBM_Logo.ch8";
 
 			byte[] ram = File.ReadAllBytes(filePath);
 

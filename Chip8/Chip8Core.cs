@@ -22,12 +22,18 @@ namespace Chip8
 		byte[] cpuRegisters = new byte[16];//V
 
 		ushort[] stack = new ushort[16];
+
 		byte stackPosition = 0;
 
 
 		//ushort[] display = new ushort[64 * 32]; //or 128 * 64
 
 	    char[,] display = new char[64,32]; //1 or 0, black or white
+
+		private bool canDraw = false;
+
+		public bool CanDraw { get; set; }
+
 
 
 		// Font data
@@ -62,7 +68,7 @@ namespace Chip8
 			Array.Copy(fontData, 0, memory, 80, fontData.Length);
 
 
-			readRom("G:/Projects/Chip8/IBM_Logo.ch8");
+			readRom("C:/Projects/Chip8/IBM_Logo.ch8");
 
 		}
 
@@ -79,7 +85,8 @@ namespace Chip8
 			{
 				//Fetch
 				byte[] chunk = { memory[programCounter], memory[programCounter + 1] };
-				bool jumped = false;
+
+				programCounter += 2; //less error prone to put it here at the top
 
 
 				// Convert it to Big Endian if its in little endian, should fix read bug
@@ -119,7 +126,7 @@ namespace Chip8
 					Console.WriteLine("Set the Program Counter to " + nnn);
 
 					programCounter = (ushort)Convert.ToInt32(nnn, 16);
-					jumped = true;
+				
 
 				}
 				else if (opCode.StartsWith("6"))
@@ -165,6 +172,11 @@ namespace Chip8
 				}
 				else if (opCode.StartsWith("D"))
 				{
+
+					canDraw = true;
+
+					//need to redo this, its completely wrong lol
+
 					//Draw
 					int x = Int32.Parse(opCode.Substring(1, 1));
 					int y = Int32.Parse(opCode.Substring(2, 1));
@@ -182,13 +194,6 @@ namespace Chip8
 				}
 
 
-
-
-				if (!jumped)
-				{
-
-					programCounter += 2;
-				}
 
 			} catch(Exception e)
 			{
@@ -211,7 +216,7 @@ namespace Chip8
 
 
 			Console.WriteLine("Rom Size: " + rom.Length);
-			Console.WriteLine("Memory Size: " + memory.Length);
+			Console.WriteLine("Memory Size: " + memory.Length+"\n");
 
 		}
 
