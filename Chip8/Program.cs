@@ -30,11 +30,11 @@ namespace Chip8
 
                 PollEvents();
 
-                //if(chip8.CanDraw)
-               // {
+                if(chip8.CanDraw)
+                {
 					Render();
-                //    chip8.CanDraw = false;
-				//}
+                    chip8.CanDraw = false;
+				}
 
              
             }
@@ -118,7 +118,7 @@ namespace Chip8
 
 
 
-            char[,] display = chip8.getDisplay();
+            ushort[,] display = chip8.getDisplay();
 
             for (int i = 0; i < display.GetLength(0); i++)
             {
@@ -126,12 +126,12 @@ namespace Chip8
                 {
 
                     //off/0 is black
-                   if(display[i, j] == '0') {
+                   if(display[i, j] == 0) {
 
                         SDL.SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
                         
 
-                    } else if (display[i, j] == 'F')
+                    } else if (display[i, j] == 1)
                     {
                         SDL.SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
 

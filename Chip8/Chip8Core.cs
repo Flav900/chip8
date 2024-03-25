@@ -14,7 +14,7 @@ namespace Chip8
 
 
 	//	ushort opCode;
-		ushort index;
+		ushort index; //I
 		ushort programCounter = 512;
 
 		byte[] memory = new byte[4096];
@@ -28,9 +28,8 @@ namespace Chip8
 
 		//ushort[] display = new ushort[64 * 32]; //or 128 * 64
 
-	    char[,] display = new char[64,32]; //1 or 0, black or white
+	    ushort[,] display = new ushort[64,32]; //1 or 0, black or white
 
-		private bool canDraw = false;
 
 		public bool CanDraw { get; set; }
 
@@ -109,7 +108,7 @@ namespace Chip8
 				}
 				else if (opCode.StartsWith("A"))
 				{
-
+					//Set I to NNN
 
 					string nnn = opCode.Substring(1);
 
@@ -126,7 +125,7 @@ namespace Chip8
 					Console.WriteLine("Set the Program Counter to " + nnn);
 
 					programCounter = (ushort)Convert.ToInt32(nnn, 16);
-				
+
 
 				}
 				else if (opCode.StartsWith("6"))
@@ -173,19 +172,112 @@ namespace Chip8
 				else if (opCode.StartsWith("D"))
 				{
 
-					canDraw = true;
+					CanDraw = true;
+
 
 					//need to redo this, its completely wrong lol
 
 					//Draw
 					int x = Int32.Parse(opCode.Substring(1, 1));
 					int y = Int32.Parse(opCode.Substring(2, 1));
-					char n = opCode[3];
+					//char n = opCode[3];
+					int n = Convert.ToInt32(opCode[3] + "", 16);
 
-					Console.WriteLine("Draw " + ((n=='F')?"White":"Black") + " at x:" + x + ", y:" + y);
+					int newX = cpuRegisters[x] & 63;
+					int newY = cpuRegisters[y] & 31;
 
 
-					display[x, y] = n;
+					Console.WriteLine(" newX " + newX);
+					Console.WriteLine(" newY " + newY);
+
+					Console.WriteLine( " n " + n);
+
+					Console.WriteLine(" index is " + index);
+
+
+					for (int rows = 0; rows < n; rows++)
+					{
+						//memory[index]
+
+						byte spriteRow = memory[index + rows];
+
+						// Convert the byte to a binary string
+						//string binaryString = Convert.ToString(spriteRow, 2).PadLeft(8, '0');
+
+
+
+						//for (int col = 0; col < 8; col++)
+						//	{
+
+						//}
+
+
+
+						byte memoryValue = memory[index + n];
+
+						//Console.WriteLine("memoryValue " + memoryValue);
+						string binaryString = Convert.ToString(spriteRow, 2).PadLeft(8, '0');
+						//Console.WriteLine(binaryString);
+
+						string bits = binaryString.ToString();
+
+						foreach (char bit in bits)
+						{
+							int number = int.Parse(bit.ToString());
+							Console.WriteLine(number);
+
+							Console.WriteLine("newX" + newX);
+
+
+							if (number == 1)
+							{
+
+								if (display[newX, newY] == 1)
+								{
+									display[newX, newY] = 0;
+									//CanDraw = true;
+								} else
+								{
+									display[newX, newY] = 1;
+								}
+
+
+							} else
+							{
+
+							}
+
+							if (newX >= 63)
+							{
+								break;
+							}
+							else
+							{
+								newX++;
+							}
+
+
+						}
+
+
+						if (newY >= 31)
+						{
+							break;
+						} else
+						{
+							newY++;
+						}
+					
+
+							
+						
+					}
+
+
+					//	Console.WriteLine("Draw " + ((n=='F')?"White":"Black") + " at x:" + x + ", y:" + y);
+
+
+					//	display[newX, newY] = n;
 
 				}
 				else
@@ -220,7 +312,7 @@ namespace Chip8
 
 		}
 
-		public char[,] getDisplay()
+		public ushort[,] getDisplay()
 		{
 			return display;
 		}
