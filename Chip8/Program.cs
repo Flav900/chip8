@@ -120,25 +120,26 @@ namespace Chip8
 
             ushort[,] display = chip8.getDisplay();
 
-            for (int i = 0; i < display.GetLength(0); i++)
+            for (int x = 0; x < display.GetLength(0); x++)
             {
-                for (int j = 0; j < display.GetLength(1); j++)
+                for (int y = 0; y < display.GetLength(1); y++)
                 {
 
                     //off/0 is black
-                   if(display[i, j] == 0) {
+                   if(display[x, y] == 0) {
 
-                        SDL.SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+                     //   SDL.SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
                         
 
-                    } else if (display[i, j] == 1)
+                    } else if (display[x, y] == 1)
                     {
                         SDL.SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
+                        SDL.SDL_RenderDrawPoint(renderer, x, y);
 
                     }
 
 
-                    SDL.SDL_RenderDrawPoint(renderer, i, j);
+                //    SDL.SDL_RenderDrawPoint(renderer, i, j);
 
 
                 }

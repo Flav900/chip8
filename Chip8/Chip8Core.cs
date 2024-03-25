@@ -187,6 +187,9 @@ namespace Chip8
 					int newY = cpuRegisters[y] & 31;
 
 
+					int startNewX = newX;
+
+
 					Console.WriteLine(" newX " + newX);
 					Console.WriteLine(" newY " + newY);
 
@@ -220,6 +223,8 @@ namespace Chip8
 						//Console.WriteLine(binaryString);
 
 						string bits = binaryString.ToString();
+
+						newX = startNewX;
 
 						foreach (char bit in bits)
 						{
@@ -292,7 +297,7 @@ namespace Chip8
 				Console.WriteLine("Error: " + e);
 			}
 
-			Console.ReadLine();
+			//Console.ReadLine(); //Debug
 
 
 		}
