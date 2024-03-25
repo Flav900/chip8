@@ -13,7 +13,7 @@ namespace Chip8
 		//ushort = unsigned short
 
 
-	//	ushort opCode;
+	    ushort opCode;
 		ushort index; //I
 		ushort programCounter = 512;
 
@@ -67,8 +67,8 @@ namespace Chip8
 			Array.Copy(fontData, 0, memory, 80, fontData.Length);
 
 
-			//readRom("C:/Projects/Chip8/IBM_Logo.ch8");
-			readRom("C:/Projects/Chip8/test_opcode.ch8");
+			readRom("C:/Projects/Chip8/IBM_Logo.ch8");
+			//readRom("C:/Projects/Chip8/test_opcode.ch8");
 			
 
 		}
@@ -96,208 +96,251 @@ namespace Chip8
 					Array.Reverse(chunk);
 				}
 
-				string opCode = BitConverter.ToUInt16(chunk, 0).ToString("X4"); // "X4" for 4 digits
+				string opCodeStr = BitConverter.ToUInt16(chunk, 0).ToString("X4"); // "X4" for 4 digits
 
-				Console.WriteLine(opCode);
+				Console.WriteLine(opCodeStr);
+
+				 opCode = Convert.ToUInt16(opCodeStr, 16);
 
 
-				//Decode
+				//okay so we use the fancy bitwise operations to still have a switch statement 
+				//Note: 0xNumber to show it in hexidecimal
 
-				if (opCode.Equals("00E0"))
+				//first number
+				int nibble = opCode >> 12;
+
+				string nnn,nn;
+
+				int x, y;
+
+				switch (nibble)
 				{
-					Console.WriteLine("Clearing Screen");
-					clearScreen();
-					CanDraw = true;
-				}
-				else if (opCode.StartsWith("A"))
-				{
-					//Set I to NNN
+					case 0x0:
 
-					string nnn = opCode.Substring(1);
-
-					Console.WriteLine("Set Index to " + nnn);
-
-					index = (ushort)Convert.ToInt32(nnn, 16);
-
-				}
-				else if (opCode.StartsWith("1"))
-				{
-					//Set the PC to nnn
-					string nnn = opCode.Substring(1);
-
-					Console.WriteLine("Set the Program Counter to " + nnn);
-
-					programCounter = (ushort)Convert.ToInt32(nnn, 16);
-
-
-				}
-				else if (opCode.StartsWith("6"))
-				{
-					int x = Convert.ToInt32(opCode.Substring(1, 1), 16);
-
-					string nn = opCode.Substring(2);
-
-					Console.WriteLine("Set Cpu Register " + x + " to " + nn);
-
-					//set register VX
-					cpuRegisters[x] = Convert.ToByte(nn, 16);
-
-
-				}
-				else if (opCode.StartsWith("7"))
-				{
-					//add value to register VX
-
-					int x = Convert.ToInt32(opCode.Substring(1, 1), 16);
-			
-					string nn = opCode.Substring(2);
-
-
-					Console.WriteLine("Add " + nn + " to Cpu Register " + x);
-
-					int sum = cpuRegisters[x] + Convert.ToByte(nn, 16);
-
-					Console.WriteLine("sum " + sum);
-
-					//need to check what happens when overflow is detected
-					if (sum > 255)
-					{
-
-						Console.WriteLine("Overflow");
-
-						sum = sum % 256; //wraps around it, for now
-
-					}
-
-					cpuRegisters[x] = (byte)sum;
-
-
-				}
-				else if (opCode.StartsWith("D"))
-				{
-
-					CanDraw = true;
-
-
-					//need to redo this, its completely wrong lol
-
-					//Draw
-
-					int x = Convert.ToInt32(opCode.Substring(1, 1), 16);
-					int y = Convert.ToInt32(opCode.Substring(2, 1), 16);
-
-					//char n = opCode[3];
-					int n = Convert.ToInt32(opCode[3] + "", 16);
-
-
-					Console.WriteLine("Drawing "+ n+" pixels long ");
-
-					int newX = cpuRegisters[x] & 63;
-					int newY = cpuRegisters[y] & 31;
-
-
-					int startNewX = newX;
-
-
-				//	Console.WriteLine(" newX " + newX);
-				//	Console.WriteLine(" newY " + newY);
-
-					//Console.WriteLine( " n " + n);
-
-				//	Console.WriteLine(" index is " + index);
-
-
-					for (int rows = 0; rows < n; rows++)
-					{
-						//memory[index]
-
-						byte spriteRow = memory[index + rows];
-
-						// Convert the byte to a binary string
-						//string binaryString = Convert.ToString(spriteRow, 2).PadLeft(8, '0');
-
-
-
-						//for (int col = 0; col < 8; col++)
-						//	{
-
-						//}
-
-
-
-						byte memoryValue = memory[index + n];
-
-						//Console.WriteLine("memoryValue " + memoryValue);
-						string binaryString = Convert.ToString(spriteRow, 2).PadLeft(8, '0');
-						//Console.WriteLine(binaryString);
-
-						string bits = binaryString.ToString();
-
-						newX = startNewX;
-
-						foreach (char bit in bits)
+						if(opCode == 0x00E0)
 						{
-							int number = int.Parse(bit.ToString());
-							//Console.WriteLine(number);
+							Console.WriteLine("Clearing Screen");
+							clearScreen();
+							CanDraw = true;
+						}
 
-						//	Console.WriteLine("newX" + newX);
+					break;
 
 
-							if (number == 1)
+					case 0x1:
+
+						//Set the PC to nnn
+						 nnn = opCodeStr.Substring(1);
+
+						Console.WriteLine("Set the Program Counter to " + nnn);
+
+						programCounter = (ushort)Convert.ToInt32(nnn, 16);
+
+
+					break;
+
+
+
+					case 0x6:
+
+						 x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+
+						nn = opCodeStr.Substring(2);
+
+						Console.WriteLine("Set Cpu Register " + x + " to " + nn);
+
+						//set register VX
+						cpuRegisters[x] = Convert.ToByte(nn, 16);
+
+
+					break;
+
+
+					case 0x7:
+
+						//add value to register VX
+
+						x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+
+						nn = opCodeStr.Substring(2);
+
+
+						Console.WriteLine("Add " + nn + " to Cpu Register " + x);
+
+						int sum = cpuRegisters[x] + Convert.ToByte(nn, 16);
+
+						Console.WriteLine("sum " + sum);
+
+						//need to check what happens when overflow is detected
+						if (sum > 255)
+						{
+
+							Console.WriteLine("Overflow");
+
+							sum = sum % 256; //wraps around it, for now
+
+						}
+
+						cpuRegisters[x] = (byte)sum;
+
+
+						break;
+
+
+
+
+					case 0xA:
+
+						//Set I to NNN
+
+						 nnn = opCodeStr.Substring(1);
+
+						Console.WriteLine("Set Index to " + nnn);
+
+						index = (ushort)Convert.ToInt32(nnn, 16);
+
+
+					break;
+
+
+
+					case 0xD:
+
+
+						CanDraw = true;
+
+
+						//need to redo this, its completely wrong lol
+
+						//Draw
+
+						 x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+						 y = Convert.ToInt32(opCodeStr.Substring(2, 1), 16);
+
+						//char n = opCode[3];
+						int n = Convert.ToInt32(opCodeStr[3] + "", 16);
+
+
+						Console.WriteLine("Drawing " + n + " pixels long ");
+
+						int newX = cpuRegisters[x] & 63;
+						int newY = cpuRegisters[y] & 31;
+
+
+						int startNewX = newX;
+
+
+						//	Console.WriteLine(" newX " + newX);
+						//	Console.WriteLine(" newY " + newY);
+
+						//Console.WriteLine( " n " + n);
+
+						//	Console.WriteLine(" index is " + index);
+
+
+						for (int rows = 0; rows < n; rows++)
+						{
+							//memory[index]
+
+							byte spriteRow = memory[index + rows];
+
+							// Convert the byte to a binary string
+							//string binaryString = Convert.ToString(spriteRow, 2).PadLeft(8, '0');
+
+
+
+							//for (int col = 0; col < 8; col++)
+							//	{
+
+							//}
+
+
+
+							byte memoryValue = memory[index + n];
+
+							//Console.WriteLine("memoryValue " + memoryValue);
+							string binaryString = Convert.ToString(spriteRow, 2).PadLeft(8, '0');
+							//Console.WriteLine(binaryString);
+
+							string bits = binaryString.ToString();
+
+							newX = startNewX;
+
+							foreach (char bit in bits)
 							{
+								int number = int.Parse(bit.ToString());
+								//Console.WriteLine(number);
 
-								if (display[newX, newY] == 1)
+								//	Console.WriteLine("newX" + newX);
+
+
+								if (number == 1)
 								{
-									display[newX, newY] = 0;
-									//CanDraw = true;
-								} else
+
+									if (display[newX, newY] == 1)
+									{
+										display[newX, newY] = 0;
+										//CanDraw = true;
+									}
+									else
+									{
+										display[newX, newY] = 1;
+									}
+
+
+								}
+								else
 								{
-									display[newX, newY] = 1;
+
+								}
+
+								if (newX >= 63)
+								{
+									break;
+								}
+								else
+								{
+									newX++;
 								}
 
 
-							} else
-							{
-
 							}
 
-							if (newX >= 63)
+
+							if (newY >= 31)
 							{
 								break;
 							}
 							else
 							{
-								newX++;
+								newY++;
 							}
 
 
+
+
 						}
 
 
-						if (newY >= 31)
-						{
-							break;
-						} else
-						{
-							newY++;
-						}
-					
-
-							
-						
-					}
+						//	Console.WriteLine("Draw " + ((n=='F')?"White":"Black") + " at x:" + x + ", y:" + y);
 
 
-					//	Console.WriteLine("Draw " + ((n=='F')?"White":"Black") + " at x:" + x + ", y:" + y);
+						//	display[newX, newY] = n;
+
+						break;
 
 
-					//	display[newX, newY] = n;
+
+
+
+					default:
+					Console.WriteLine("Unknown opCode: " + opCodeStr);
+					break;
 
 				}
-				else
-				{
-					Console.WriteLine("Unknown opCode: " + opCode);
-				}
+
+
+
 
 
 
@@ -306,7 +349,7 @@ namespace Chip8
 				Console.WriteLine("Error: " + e);
 			}
 
-			//Console.ReadLine(); //Debug
+			Console.ReadLine(); //Debug
 
 
 		}
