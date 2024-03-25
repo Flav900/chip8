@@ -133,7 +133,7 @@ namespace Chip8
 				}
 				else if (opCode.StartsWith("6"))
 				{
-					int x = Int32.Parse(opCode.Substring(1, 1));
+					int x = Convert.ToInt32(opCode.Substring(1, 1), 16);
 
 					string nn = opCode.Substring(2);
 
@@ -147,8 +147,9 @@ namespace Chip8
 				else if (opCode.StartsWith("7"))
 				{
 					//add value to register VX
-					int x = Int32.Parse(opCode.Substring(1, 1));
 
+					int x = Convert.ToInt32(opCode.Substring(1, 1), 16);
+			
 					string nn = opCode.Substring(2);
 
 
@@ -176,13 +177,15 @@ namespace Chip8
 				{
 
 					CanDraw = true;
-			
+
 
 					//need to redo this, its completely wrong lol
 
 					//Draw
-					int x = Int32.Parse(opCode.Substring(1, 1));
-					int y = Int32.Parse(opCode.Substring(2, 1));
+
+					int x = Convert.ToInt32(opCode.Substring(1, 1), 16);
+					int y = Convert.ToInt32(opCode.Substring(2, 1), 16);
+
 					//char n = opCode[3];
 					int n = Convert.ToInt32(opCode[3] + "", 16);
 
@@ -303,7 +306,7 @@ namespace Chip8
 				Console.WriteLine("Error: " + e);
 			}
 
-			Console.ReadLine(); //Debug
+			//Console.ReadLine(); //Debug
 
 
 		}
