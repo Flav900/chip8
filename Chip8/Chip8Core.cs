@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,7 +22,9 @@ namespace Chip8
 
 		byte[] cpuRegisters = new byte[16];//V
 
-		ushort[] stack = new ushort[16];
+		//ushort[] stack = new ushort[16];
+
+		Stack<ushort> stack = new Stack<ushort>(16);
 
 		byte stackPosition = 0;
 
@@ -33,7 +36,7 @@ namespace Chip8
 
 		public bool CanDraw { get; set; }
 
-
+		public bool CanStepThroughProcess { get; set; }
 
 		// Font data
 		byte[] fontData = new byte[] {
@@ -68,11 +71,11 @@ namespace Chip8
 
 
 			readRom(filename);
-			
+
 			//readRom("C:/Projects/Chip8/IBM_Logo.ch8");
 			//readRom("C:/Projects/Chip8/test_opcode.ch8");
 
-
+			CanStepThroughProcess = false;
 		}
 
 
@@ -124,7 +127,15 @@ namespace Chip8
 							Console.WriteLine("Clearing Screen");
 							clearScreen();
 							CanDraw = true;
+						} else if (opCode == 0x00EE)
+						{
+							programCounter =  stack.Pop();
+							Console.WriteLine("Getting Program Counter from stack and setting it to " + programCounter);
 						}
+
+
+
+						
 
 					break;
 
@@ -138,6 +149,20 @@ namespace Chip8
 
 						programCounter = (ushort)Convert.ToInt32(nnn, 16);
 
+
+					break;
+
+
+					case 0x2:
+
+						//Set the PC to nnn
+						nnn = opCodeStr.Substring(1);
+
+						Console.WriteLine("Save the current Program Counter to Stack and it to " + nnn);
+
+						stack.Push(programCounter);
+
+						programCounter = (ushort)Convert.ToInt32(nnn, 16);
 
 					break;
 
@@ -433,7 +458,12 @@ namespace Chip8
 			}
 
 			//I'll need to implemnent the delay timer here
-			//Console.ReadLine(); //Debug
+
+
+			if (CanStepThroughProcess)
+			{
+				Console.ReadLine(); //Debug
+			}
 
 
 		}

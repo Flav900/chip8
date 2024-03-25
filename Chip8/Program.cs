@@ -30,7 +30,10 @@ namespace Chip8
             Setup();
             chip8.init(filename);
 
-            while (running)
+			chip8.CanStepThroughProcess = true; //for debug purposes
+
+
+			while (running)
             {
               
                 chip8.doCycle();
@@ -135,8 +138,7 @@ namespace Chip8
             {
                 for (int y = 0; y < display.GetLength(1); y++)
                 {
-
-                    
+           
                     if (display[x, y] == 1)
                     {
 
