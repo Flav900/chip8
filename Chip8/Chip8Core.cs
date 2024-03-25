@@ -57,7 +57,7 @@ namespace Chip8
 
 
 
-		public void init()
+		public void init(string filename)
 		{
 			// I need to add fonts and other functions in the first 512
 			//512 onwards where I'm supposed to load rom
@@ -67,9 +67,11 @@ namespace Chip8
 			Array.Copy(fontData, 0, memory, 80, fontData.Length);
 
 
-			readRom("C:/Projects/Chip8/IBM_Logo.ch8");
-			//readRom("C:/Projects/Chip8/test_opcode.ch8");
+			readRom(filename);
 			
+			//readRom("C:/Projects/Chip8/IBM_Logo.ch8");
+			//readRom("C:/Projects/Chip8/test_opcode.ch8");
+
 
 		}
 
@@ -104,7 +106,7 @@ namespace Chip8
 
 
 				//okay so we use the fancy bitwise operations to still have a switch statement 
-				//Note: 0xNumber to show it in hexidecimal
+				//Note: 0xNumber to show it in hexadecimal
 
 				//first number
 				int nibble = opCode >> 12;
@@ -140,10 +142,72 @@ namespace Chip8
 					break;
 
 
+					case 0x3:
+
+						x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+
+						nn = opCodeStr.Substring(2);
+
+						Console.WriteLine("Will skip next instruction if V["+x+"] equals "+nn);
+
+
+						//if (Vx == NN)
+						if (cpuRegisters[x] == Convert.ToByte(nn, 16))
+						{
+							Console.WriteLine("skipping...");
+							programCounter += 2;
+						}
+
+
+					break;
+
+
+					case 0x4:
+
+						x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+
+						nn = opCodeStr.Substring(2);
+
+						Console.WriteLine("Will skip next instruction if V[" + x + "] does not equal " + nn);
+
+
+						//if (Vx == NN)
+						if (cpuRegisters[x] != Convert.ToByte(nn, 16))
+						{
+							Console.WriteLine("skipping...");
+							programCounter += 2;
+						}
+
+
+					break;
+
+
+					case 0x5:
+
+						x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+
+						y = Convert.ToInt32(opCodeStr.Substring(2, 1), 16);
+
+
+						Console.WriteLine("Will skip next instruction if V[" + x + "] equals " + "V[" + y + "]");
+
+
+						//if (Vx == NN)
+						if (cpuRegisters[x] == cpuRegisters[y])
+						{
+							Console.WriteLine("skipping...");
+							programCounter += 2;
+						}
+
+
+					break;
+
+
+
 
 					case 0x6:
 
-						 x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+						x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
 
 						nn = opCodeStr.Substring(2);
 
@@ -184,8 +248,28 @@ namespace Chip8
 						cpuRegisters[x] = (byte)sum;
 
 
-						break;
+					break;
 
+
+					case 0x9:
+
+						x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+
+						y = Convert.ToInt32(opCodeStr.Substring(2, 1), 16);
+
+
+						Console.WriteLine("Will skip next instruction if V[" + x + "] does not equal " + "V[" + y + "]");
+
+
+						//if (Vx == NN)
+						if (cpuRegisters[x] != cpuRegisters[y])
+						{
+							Console.WriteLine("skipping...");
+							programCounter += 2;
+						}
+
+
+					break;
 
 
 
@@ -208,9 +292,6 @@ namespace Chip8
 
 
 						CanDraw = true;
-
-
-						//need to redo this, its completely wrong lol
 
 						//Draw
 
@@ -265,6 +346,8 @@ namespace Chip8
 							string bits = binaryString.ToString();
 
 							newX = startNewX;
+
+							//will need to use bitwise operations here too instead of char spilt
 
 							foreach (char bit in bits)
 							{

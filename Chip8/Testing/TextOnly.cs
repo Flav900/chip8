@@ -13,7 +13,7 @@ namespace Chip8
 
 	public TextOnly()
 		{
-			chip8.init();
+			chip8.init("C:/Projects/Chip8/test_opcode.ch8");
 
 			for (; ; ) {
 				chip8.doCycle();

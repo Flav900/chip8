@@ -18,10 +18,12 @@ namespace Chip8
 
         Chip8Core chip8 = new Chip8Core();
 
-        Program()
+        string filename = "C:/Projects/Chip8/test_opcode.ch8"; //"C:/Projects/Chip8/IBM_Logo.ch8"
+
+		Program()
         {
             Setup();
-            chip8.init();
+            chip8.init(filename);
 
             while (running)
             {
@@ -41,10 +43,7 @@ namespace Chip8
 
             CleanUp();
 
-
         }
-
-
 
 
 
