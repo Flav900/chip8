@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Chip8;
 using SDL2;
+using static SDL2.SDL;
 
 namespace Chip8
 {
@@ -15,10 +16,14 @@ namespace Chip8
         IntPtr window;
         IntPtr renderer;
         bool running = true;
+        ushort[,] display;
+        int scaleFactor = 8;
 
-        Chip8Core chip8 = new Chip8Core();
+		Chip8Core chip8 = new Chip8Core();
 
-        string filename = "C:/Projects/Chip8/test_opcode.ch8"; //"C:/Projects/Chip8/IBM_Logo.ch8"
+        string filename = "C:/Projects/Chip8/test_opcode.ch8"; //https://github.com/corax89/chip8-test-rom
+
+		// string filename = "C:/Projects/Chip8/IBM_Logo.ch8";
 
 		Program()
         {
@@ -114,37 +119,39 @@ namespace Chip8
             SDL.SDL_RenderClear(renderer);
 
 
+            //using rects instead of DrawPoint now for better use with the scaling
+			var rect = new SDL.SDL_Rect
+			{
+				x = 0,
+				y = 0,
+				w = scaleFactor,
+				h = scaleFactor
+			};
 
 
-
-            ushort[,] display = chip8.getDisplay();
+			display = chip8.getDisplay();
 
             for (int x = 0; x < display.GetLength(0); x++)
             {
                 for (int y = 0; y < display.GetLength(1); y++)
                 {
 
-                    //off/0 is black
-                   if(display[x, y] == 0) {
-
-                     //   SDL.SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-                        
-
-                    } else if (display[x, y] == 1)
+                    
+                    if (display[x, y] == 1)
                     {
+
                         SDL.SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
-                        SDL.SDL_RenderDrawPoint(renderer, x, y);
+						//SDL.SDL_RenderDrawPoint(renderer, x, y);
+						rect.x = x * scaleFactor; 
+                        rect.y = y * scaleFactor; 
 
-                    }
-
-
-                //    SDL.SDL_RenderDrawPoint(renderer, i, j);
-
+						SDL.SDL_RenderFillRect(renderer, ref rect);
+					}
 
                 }
             }
 
-            /* sdl fun
+            /* sdl fun, for reference
 		
 
 			// Set the color to red before drawing our shape

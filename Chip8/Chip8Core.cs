@@ -432,7 +432,8 @@ namespace Chip8
 				Console.WriteLine("Error: " + e);
 			}
 
-			Console.ReadLine(); //Debug
+			//I'll need to implemnent the delay timer here
+			//Console.ReadLine(); //Debug
 
 
 		}
