@@ -67,7 +67,9 @@ namespace Chip8
 			Array.Copy(fontData, 0, memory, 80, fontData.Length);
 
 
-			readRom("C:/Projects/Chip8/IBM_Logo.ch8");
+			//readRom("C:/Projects/Chip8/IBM_Logo.ch8");
+			readRom("C:/Projects/Chip8/test_opcode.ch8");
+			
 
 		}
 
@@ -105,6 +107,7 @@ namespace Chip8
 				{
 					Console.WriteLine("Clearing Screen");
 					clearScreen();
+					CanDraw = true;
 				}
 				else if (opCode.StartsWith("A"))
 				{
@@ -173,7 +176,7 @@ namespace Chip8
 				{
 
 					CanDraw = true;
-
+			
 
 					//need to redo this, its completely wrong lol
 
@@ -183,6 +186,9 @@ namespace Chip8
 					//char n = opCode[3];
 					int n = Convert.ToInt32(opCode[3] + "", 16);
 
+
+					Console.WriteLine("Drawing "+ n+" pixels long ");
+
 					int newX = cpuRegisters[x] & 63;
 					int newY = cpuRegisters[y] & 31;
 
@@ -190,12 +196,12 @@ namespace Chip8
 					int startNewX = newX;
 
 
-					Console.WriteLine(" newX " + newX);
-					Console.WriteLine(" newY " + newY);
+				//	Console.WriteLine(" newX " + newX);
+				//	Console.WriteLine(" newY " + newY);
 
-					Console.WriteLine( " n " + n);
+					//Console.WriteLine( " n " + n);
 
-					Console.WriteLine(" index is " + index);
+				//	Console.WriteLine(" index is " + index);
 
 
 					for (int rows = 0; rows < n; rows++)
@@ -229,9 +235,9 @@ namespace Chip8
 						foreach (char bit in bits)
 						{
 							int number = int.Parse(bit.ToString());
-							Console.WriteLine(number);
+							//Console.WriteLine(number);
 
-							Console.WriteLine("newX" + newX);
+						//	Console.WriteLine("newX" + newX);
 
 
 							if (number == 1)
@@ -297,7 +303,7 @@ namespace Chip8
 				Console.WriteLine("Error: " + e);
 			}
 
-			//Console.ReadLine(); //Debug
+			Console.ReadLine(); //Debug
 
 
 		}
