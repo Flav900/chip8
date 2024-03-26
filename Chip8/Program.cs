@@ -33,10 +33,11 @@ namespace Chip8
 
             if (showFileDialog)
             {
+                
 
                 OpenFileDialog openFileDialog = new OpenFileDialog
                 {
-                    InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                    InitialDirectory = "C:\\Projects\\Chip8", //Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
                     Title = "Select a file",
                     Filter = "All files (*.*)|*.*",
                     RestoreDirectory = true
@@ -45,7 +46,7 @@ namespace Chip8
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     filename = openFileDialog.FileName;
-                    Console.WriteLine($"Selected file: {filename}");
+                    Console.WriteLine("Loading "+filename+"...");
 
                 }
             }

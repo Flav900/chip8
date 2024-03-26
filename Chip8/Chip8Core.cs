@@ -41,7 +41,9 @@ namespace Chip8
 		public bool PauseIfUnknownOpCode { get; set; }
 
 
-		public bool oldChip8Behaviour { get; set; }
+		public bool OldChip8Behaviour { get; set; }
+
+		public bool DebugMode { get; set; }
 
 		// Font data
 		byte[] fontData = new byte[] {
@@ -82,7 +84,8 @@ namespace Chip8
 
 			CanStepThroughProcess = false;
 			PauseIfUnknownOpCode = false;
-			oldChip8Behaviour = false;
+			OldChip8Behaviour = false;
+			DebugMode = false;
 		}
 
 
@@ -110,7 +113,7 @@ namespace Chip8
 
 				string opCodeStr = BitConverter.ToUInt16(chunk, 0).ToString("X4"); // "X4" for 4 digits
 
-				Console.WriteLine(opCodeStr);
+				//Console.WriteLine(opCodeStr);
 
 				 opCode = Convert.ToUInt16(opCodeStr, 16);
 
@@ -149,7 +152,12 @@ namespace Chip8
 						//Set the PC to nnn
 						 nnn = opCodeStr.Substring(1);
 
-						Console.WriteLine("Set the Program Counter to " + nnn);
+						if(DebugMode)
+						{
+
+							Console.WriteLine("Set the Program Counter to " + nnn);
+						}
+
 
 						programCounter = (ushort)Convert.ToInt32(nnn, 16);
 
@@ -382,7 +390,7 @@ namespace Chip8
 							case 6:
 								//Shift the value in VX, 1 bit to the right
 
-								if (oldChip8Behaviour)
+								if (OldChip8Behaviour)
 								{
 									cpuRegisters[x] = cpuRegisters[y];
 								}
@@ -397,7 +405,7 @@ namespace Chip8
 							case 0x0E:
 								//Shift the value in VX, 1 bit to the left
 
-								if (oldChip8Behaviour)
+								if (OldChip8Behaviour)
 								{
 									cpuRegisters[x] = cpuRegisters[y];
 								}
