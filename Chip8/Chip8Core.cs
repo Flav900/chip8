@@ -460,7 +460,24 @@ namespace Chip8
 
 					break;
 
+					case 0xC:
 
+						//
+						x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+						nn = opCodeStr.Substring(2);
+
+						Console.WriteLine("Generating Random Number to V["+x+"] & "+nn);
+
+						Random random = new Random();
+
+						int randNum = random.Next(255);
+
+						cpuRegisters[x] = (byte)(randNum & Convert.ToByte(nn, 16));
+
+					break;
+
+
+						
 
 					case 0xD:
 
