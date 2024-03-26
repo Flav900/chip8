@@ -28,9 +28,15 @@ namespace Chip8
 	    ushort[,] display = new ushort[64,32]; //1 or 0, black or white
 
 
+		byte delayTimer;
+		byte soundTimer =0;
+
+
 		public bool CanDraw { get; set; }
 
 		public bool CanStepThroughProcess { get; set; }
+
+		public bool PauseIfUnknownOpCode { get; set; }
 
 		// Font data
 		byte[] fontData = new byte[] {
@@ -70,6 +76,7 @@ namespace Chip8
 			//readRom("C:/Projects/Chip8/test_opcode.ch8");
 
 			CanStepThroughProcess = false;
+			PauseIfUnknownOpCode = false;
 		}
 
 
@@ -450,6 +457,13 @@ namespace Chip8
 
 					default:
 					Console.WriteLine("Unknown opCode: " + opCodeStr);
+
+					if(PauseIfUnknownOpCode)
+					{
+						Console.ReadLine();
+						
+					}
+
 					break;
 
 				}

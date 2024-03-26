@@ -21,19 +21,19 @@ namespace Chip8
 
 		Chip8Core chip8 = new Chip8Core();
 
-        string filename = "C:/Projects/Chip8/test_opcode.ch8"; //https://github.com/corax89/chip8-test-rom
+        string filename = "C:/Projects/Chip8/8ceattourny_d1.ch8"; //https://github.com/corax89/chip8-test-rom //test_opcode.ch8
 
-		// string filename = "C:/Projects/Chip8/IBM_Logo.ch8";
+        // string filename = "C:/Projects/Chip8/IBM_Logo.ch8";
 
-		Program()
+        Program()
         {
             Setup();
             chip8.init(filename);
 
-			chip8.CanStepThroughProcess = true; //for debug purposes
+			chip8.CanStepThroughProcess = false; //for debug purposes
+            chip8.PauseIfUnknownOpCode = true; //for debug purposes
 
-
-			while (running)
+            while (running)
             {
               
                 chip8.doCycle();
