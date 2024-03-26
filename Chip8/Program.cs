@@ -1,6 +1,7 @@
 ﻿//Flav
 
 using System;
+using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,12 +22,35 @@ namespace Chip8
 
 		Chip8Core chip8 = new Chip8Core();
 
-        string filename = "C:/Projects/Chip8/c8games/MAZE"; //https://github.com/corax89/chip8-test-rom //test_opcode.ch8
+        string filename = "C:/Projects/Chip8/test_opcode.ch8"; //https://github.com/corax89/chip8-test-rom //test_opcode.ch8
 
         // string filename = "C:/Projects/Chip8/IBM_Logo.ch8";
 
+    
+        bool showFileDialog = true; //Debug
         Program()
         {
+
+            if (showFileDialog)
+            {
+
+                OpenFileDialog openFileDialog = new OpenFileDialog
+                {
+                    InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                    Title = "Select a file",
+                    Filter = "All files (*.*)|*.*",
+                    RestoreDirectory = true
+                };
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    filename = openFileDialog.FileName;
+                    Console.WriteLine($"Selected file: {filename}");
+
+                }
+            }
+
+
             Setup();
             chip8.init(filename);
 
@@ -197,7 +221,8 @@ namespace Chip8
             SDL.SDL_DestroyWindow(window);
             SDL.SDL_Quit();
         }
-
+       
+        [STAThread]
         static void Main(string[] args)
         {
 

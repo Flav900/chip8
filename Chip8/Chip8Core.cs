@@ -606,9 +606,8 @@ namespace Chip8
 
 
 					/*opcodes that still have to added
-					 * 
+				
 					 * BNNN
-					 * CXNN
 					 * EX9E
 					 * EXA1
 					 * FX07
