@@ -16,7 +16,7 @@ namespace Chip8
 		ushort index; //I
 		ushort programCounter = 512;
 
-		ushort VF;//VF
+		ushort carryFlag;//VF
 
 		byte[] memory = new byte[4096];
 
@@ -41,7 +41,7 @@ namespace Chip8
 		public bool PauseIfUnknownOpCode { get; set; }
 
 
-		public bool SuperChipShiftBehaviour { get; set; }
+		public bool oldChip8Behaviour { get; set; }
 
 		// Font data
 		byte[] fontData = new byte[] {
@@ -82,7 +82,7 @@ namespace Chip8
 
 			CanStepThroughProcess = false;
 			PauseIfUnknownOpCode = false;
-			SuperChipShiftBehaviour = false;
+			oldChip8Behaviour = false;
 		}
 
 
@@ -343,10 +343,10 @@ namespace Chip8
 
 								if (result > 255)
 								{
-									VF = 1;
+									carryFlag = 1;
 								} else
 								{
-									VF = 0;
+									carryFlag = 0;
 								}
 
 							break;
@@ -382,7 +382,7 @@ namespace Chip8
 							case 6:
 								//Shift the value in VX, 1 bit to the right
 
-								if (SuperChipShiftBehaviour)
+								if (oldChip8Behaviour)
 								{
 									cpuRegisters[x] = cpuRegisters[y];
 								}
@@ -397,7 +397,7 @@ namespace Chip8
 							case 0x0E:
 								//Shift the value in VX, 1 bit to the left
 
-								if (SuperChipShiftBehaviour)
+								if (oldChip8Behaviour)
 								{
 									cpuRegisters[x] = cpuRegisters[y];
 								}
@@ -589,7 +589,7 @@ namespace Chip8
 
 
 					/*opcodes that still have to added
-					 * 8XY0,8XY1,8XY2,8XY3,8XY4,8XY5,8XY6,8XY7,8XYE
+					 * 
 					 * BNNN
 					 * CXNN
 					 * EX9E
