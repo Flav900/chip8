@@ -11,9 +11,7 @@ namespace Chip8
 {
 	internal class Chip8Core
 	{
-		//ushort = unsigned short
-
-
+	
 	    ushort opCode;
 		ushort index; //I
 		ushort programCounter = 512;
@@ -22,14 +20,10 @@ namespace Chip8
 
 		byte[] cpuRegisters = new byte[16];//V
 
-		//ushort[] stack = new ushort[16];
-
 		Stack<ushort> stack = new Stack<ushort>(16);
 
 		byte stackPosition = 0;
 
-
-		//ushort[] display = new ushort[64 * 32]; //or 128 * 64
 
 	    ushort[,] display = new ushort[64,32]; //1 or 0, black or white
 
@@ -133,9 +127,6 @@ namespace Chip8
 							Console.WriteLine("Getting Program Counter from stack and setting it to " + programCounter);
 						}
 
-
-
-						
 
 					break;
 
@@ -439,6 +430,22 @@ namespace Chip8
 
 
 
+					/*opcodes that still have to added
+					 * 8XY0,8XY1,8XY2,8XY3,8XY4,8XY5,8XY6,8XY7,8XYE
+					 * BNNN
+					 * CXNN
+					 * EX9E
+					 * EXA1
+					 * FX07
+					 * FX0A
+					 * FX15
+					 * FX18
+					 * FX1E
+					 * FX29
+					 * FX33
+					 * FX55
+					 * FX65
+					 * */
 
 
 					default:
@@ -479,7 +486,7 @@ namespace Chip8
 
 
 			Console.WriteLine("Rom Size: " + rom.Length);
-			Console.WriteLine("Memory Size: " + memory.Length+"\n");
+			//Console.WriteLine("Memory Size: " + memory.Length+"\n");
 
 		}
 
@@ -491,11 +498,11 @@ namespace Chip8
 
 		public void clearScreen()
 		{
-			for (int i = 0; i < display.GetLength(0); i++)
+			for (int x = 0; x < display.GetLength(0); x++)
 			{
-				for (int j = 0; j < display.GetLength(1); j++) 
+				for (int y = 0; y < display.GetLength(1); y++) 
 				{
-					display[i, j] = '0';
+					display[x, y] = '0';
 				}
 			}
 		}
