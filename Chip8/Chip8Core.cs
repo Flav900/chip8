@@ -16,6 +16,8 @@ namespace Chip8
 		ushort index; //I
 		ushort programCounter = 512;
 
+		ushort VF;//VF
+
 		byte[] memory = new byte[4096];
 
 		byte[] cpuRegisters = new byte[16];//V
@@ -37,6 +39,9 @@ namespace Chip8
 		public bool CanStepThroughProcess { get; set; }
 
 		public bool PauseIfUnknownOpCode { get; set; }
+
+
+		public bool SuperChipShiftBehaviour { get; set; }
 
 		// Font data
 		byte[] fontData = new byte[] {
@@ -77,6 +82,7 @@ namespace Chip8
 
 			CanStepThroughProcess = false;
 			PauseIfUnknownOpCode = false;
+			SuperChipShiftBehaviour = false;
 		}
 
 
@@ -272,6 +278,151 @@ namespace Chip8
 
 
 					break;
+
+
+					case 0x8:
+						//8750
+						x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+
+						y = Convert.ToInt32(opCodeStr.Substring(2, 1), 16);
+
+						int value = Convert.ToInt32(opCodeStr.Substring(3, 1), 16);
+
+						switch(value)
+						{
+							case 0:
+
+								//VX is set to the value of VY.
+
+								cpuRegisters[x] = cpuRegisters[y];
+
+								break;
+
+
+							case 1:
+
+								//VX is set to the bitwise/binary logical disjunction (OR) of VX and VY. VY is not affected.
+
+								cpuRegisters[x] = (byte)(cpuRegisters[x] | cpuRegisters[y]);
+
+
+								break;
+
+
+							case 2:
+
+								//VX is set to the bitwise/binary logical conjunction (AND) of VX and VY. VY is not affected.
+
+								cpuRegisters[x] = (byte)(cpuRegisters[x] & cpuRegisters[y]);
+
+
+								break;
+
+
+							case 3:
+
+								//VX is set to the bitwise/binary exclusive OR (XOR) of VX and VY. VY is not affected.
+
+								cpuRegisters[x] = (byte)(cpuRegisters[x] ^ cpuRegisters[y]);
+
+	
+							break;
+
+
+
+							case 4:
+
+								//VX is set to the value of VX plus the value of VY. VY is not affected.
+
+								int result = cpuRegisters[x] + cpuRegisters[y];
+
+								cpuRegisters[x] = (byte)(result); //must fix overflow here
+
+								//flag is set here..
+								//if overflows
+
+								if (result > 255)
+								{
+									VF = 1;
+								} else
+								{
+									VF = 0;
+								}
+
+							break;
+
+
+							case 5:
+
+								//Sets VX to the result of VX - VY
+
+								cpuRegisters[x] = (byte)(cpuRegisters[x] - cpuRegisters[y]);
+
+								//flag is set here..
+
+
+
+
+							break;
+
+
+							case 7:
+
+								//Sets VX to the result of VX - VY
+
+								cpuRegisters[x] = (byte)(cpuRegisters[y] - cpuRegisters[x]);
+
+								//flag is set here..
+
+
+							break;
+
+
+							//Ambiguous
+							case 6:
+								//Shift the value in VX, 1 bit to the right
+
+								if (SuperChipShiftBehaviour)
+								{
+									cpuRegisters[x] = cpuRegisters[y];
+								}
+
+								cpuRegisters[x] >>= 1;
+
+								//Set VF to 1 if the bit that was shifted out was 1, or 0 if it was 0
+
+								break;
+
+							//Ambiguous
+							case 0x0E:
+								//Shift the value in VX, 1 bit to the left
+
+								if (SuperChipShiftBehaviour)
+								{
+									cpuRegisters[x] = cpuRegisters[y];
+								}
+
+								cpuRegisters[x] <<= 1;
+
+								//Set VF to 1 if the bit that was shifted out was 1, or 0 if it was 0
+								break;
+
+							default:
+								Console.WriteLine("Unknown 8 opCode: " + opCodeStr);
+
+								if (PauseIfUnknownOpCode)
+								{
+									Console.ReadLine();
+
+								}
+
+							break;
+
+
+						}
+
+
+						break;
 
 
 					case 0x9:

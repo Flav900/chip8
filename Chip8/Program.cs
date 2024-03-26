@@ -21,7 +21,7 @@ namespace Chip8
 
 		Chip8Core chip8 = new Chip8Core();
 
-        string filename = "C:/Projects/Chip8/8ceattourny_d1.ch8"; //https://github.com/corax89/chip8-test-rom //test_opcode.ch8
+        string filename = "C:/Projects/Chip8/test_opcode.ch8"; //https://github.com/corax89/chip8-test-rom //test_opcode.ch8
 
         // string filename = "C:/Projects/Chip8/IBM_Logo.ch8";
 
