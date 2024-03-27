@@ -56,7 +56,7 @@ namespace Chip8
             chip8.init(filename);
 
 			chip8.CanStepThroughProcess = false; //for debug purposes
-            chip8.PauseIfUnknownOpCode = true; //for debug purposes
+            chip8.PauseIfUnknownOpCode = false; //for debug purposes
             chip8.OldChip8Behaviour = false;
             chip8.PauseIfException = true;
 
@@ -397,7 +397,7 @@ namespace Chip8
         [STAThread]
         static void Main(string[] args)
         {
-
+            Console.WriteLine("Chip 8 Emulator Alpha by Flav900.");
             new Program();
             //  new FileRead();
 
