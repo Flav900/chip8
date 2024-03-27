@@ -61,7 +61,7 @@ namespace Chip8
             chip8.PauseIfException = true;
 
             //Will adjust the config of the each rom depending on the filename ( as long as they didnt rename the file..)
-            //this is overkill? Probably, but its fun
+            //is this overkill? Probably, but its fun
             GameFixes.gameFix(chip8, filename);
 
             while (running)
