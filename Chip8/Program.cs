@@ -18,7 +18,7 @@ namespace Chip8
         IntPtr renderer;
         bool running = true;
         ushort[,] display;
-        int scaleFactor = 8;
+        int scaleFactor = 10;
 
 		Chip8Core chip8 = new Chip8Core();
 
@@ -99,7 +99,7 @@ namespace Chip8
                 SDL.SDL_WINDOWPOS_UNDEFINED,
                 SDL.SDL_WINDOWPOS_UNDEFINED,
                 640,
-                480,
+                320,
                 SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
 
             if (window == IntPtr.Zero)
