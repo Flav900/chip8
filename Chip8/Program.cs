@@ -420,7 +420,10 @@ namespace Chip8
         static void Main(string[] args)
         {
             Console.WriteLine("Chip 8 Emulator Alpha by Flav900.");
-            new Program();
+			Console.WriteLine("Follows the customary left side of the QWERTY controls");
+            Console.WriteLine("1,2,3,4,Q,W,E,R,A,S,D,F,Z,X,C");
+
+			new Program();
             //  new FileRead();
 
             //  new TextOnly();
