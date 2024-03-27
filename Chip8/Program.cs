@@ -22,12 +22,12 @@ namespace Chip8
 
 		Chip8Core chip8 = new Chip8Core();
 
-        string filename = "C:/Projects/Chip8/test_opcode.ch8"; //https://github.com/corax89/chip8-test-rom //test_opcode.ch8
+        string filename = ""; //C:/Projects/Chip8/test_opcode.ch8
 
-        // string filename = "C:/Projects/Chip8/IBM_Logo.ch8";
 
-    
-        bool showFileDialog = true; //Debug
+
+
+		bool showFileDialog = true; //Debug
         Program()
         {
 
@@ -37,8 +37,9 @@ namespace Chip8
 
                 OpenFileDialog openFileDialog = new OpenFileDialog
                 {
-                    InitialDirectory = "C:\\Projects\\Chip8", //Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-                    Title = "Select a file",
+					// InitialDirectory = "C:\\Projects\\Chip8", //Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+					InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+					Title = "Select a file",
                     Filter = "All files (*.*)|*.*",
                     RestoreDirectory = true
                 };
@@ -49,6 +50,12 @@ namespace Chip8
                     Console.WriteLine("Loading "+filename+"...");
 
                 }
+            }
+
+            if(filename.Length == 0)
+            {
+				Console.WriteLine("Specify a filename.");
+				return;
             }
 
 
