@@ -149,13 +149,13 @@ namespace Chip8
 
 						if(opCode == 0x00E0)
 						{
-							Console.WriteLine("Clearing Screen");
+							if (DebugMode) Console.WriteLine("Clearing Screen");
 							clearScreen();
 							CanDraw = true;
 						} else if (opCode == 0x00EE)
 						{
 							programCounter =  stack.Pop();
-							Console.WriteLine("Getting Program Counter from stack and setting it to " + programCounter);
+							if (DebugMode) Console.WriteLine("Getting Program Counter from stack and setting it to " + programCounter);
 						}
 
 
@@ -184,8 +184,10 @@ namespace Chip8
 
 						//Set the PC to nnn
 						nnn = opCodeStr.Substring(1);
-
-						Console.WriteLine("Save the current Program Counter to Stack and it to " + nnn);
+						if (DebugMode)
+						{
+							Console.WriteLine("Save the current Program Counter to Stack and it to " + nnn);
+						}
 
 						stack.Push(programCounter);
 
@@ -200,13 +202,15 @@ namespace Chip8
 
 						nn = opCodeStr.Substring(2);
 
-						Console.WriteLine("Will skip next instruction if V["+x+"] equals "+nn);
-
+						if (DebugMode)
+						{
+							Console.WriteLine("Will skip next instruction if V[" + x + "] equals " + nn);
+						}
 
 						//if (Vx == NN)
 						if (cpuRegisters[x] == Convert.ToByte(nn, 16))
 						{
-							Console.WriteLine("skipping...");
+							if (DebugMode) Console.WriteLine("skipping...");
 							programCounter += 2;
 						}
 
@@ -220,13 +224,13 @@ namespace Chip8
 
 						nn = opCodeStr.Substring(2);
 
-						Console.WriteLine("Will skip next instruction if V[" + x + "] does not equal " + nn);
+						if (DebugMode) Console.WriteLine("Will skip next instruction if V[" + x + "] does not equal " + nn);
 
 
 						//if (Vx == NN)
 						if (cpuRegisters[x] != Convert.ToByte(nn, 16))
 						{
-							Console.WriteLine("skipping...");
+							if (DebugMode) Console.WriteLine("skipping...");
 							programCounter += 2;
 						}
 
@@ -241,13 +245,13 @@ namespace Chip8
 						y = Convert.ToInt32(opCodeStr.Substring(2, 1), 16);
 
 
-						Console.WriteLine("Will skip next instruction if V[" + x + "] equals " + "V[" + y + "]");
+						if (DebugMode) Console.WriteLine("Will skip next instruction if V[" + x + "] equals " + "V[" + y + "]");
 
 
 						//if (Vx == NN)
 						if (cpuRegisters[x] == cpuRegisters[y])
 						{
-							Console.WriteLine("skipping...");
+							if (DebugMode) Console.WriteLine("skipping...");
 							programCounter += 2;
 						}
 
@@ -263,7 +267,7 @@ namespace Chip8
 
 						nn = opCodeStr.Substring(2);
 
-						Console.WriteLine("Set Cpu Register " + x + " to " + nn);
+						if (DebugMode) Console.WriteLine("Set Cpu Register " + x + " to " + nn);
 
 						//set register VX
 						cpuRegisters[x] = Convert.ToByte(nn, 16);
@@ -281,17 +285,17 @@ namespace Chip8
 						nn = opCodeStr.Substring(2);
 
 
-						Console.WriteLine("Add " + nn + " to Cpu Register " + x);
+						if (DebugMode) Console.WriteLine("Add " + nn + " to Cpu Register " + x);
 
 						int sum = cpuRegisters[x] + Convert.ToByte(nn, 16);
 
-						Console.WriteLine("sum " + sum);
+						//Console.WriteLine("sum " + sum);
 
 						//need to check what happens when overflow is detected
 						if (sum > 255)
 						{
 
-							Console.WriteLine("Overflow");
+						//	Console.WriteLine("Overflow");
 
 							sum = sum % 256; //wraps around it, for now
 
@@ -459,13 +463,13 @@ namespace Chip8
 						y = Convert.ToInt32(opCodeStr.Substring(2, 1), 16);
 
 
-						Console.WriteLine("Will skip next instruction if V[" + x + "] does not equal " + "V[" + y + "]");
+						if (DebugMode) Console.WriteLine("Will skip next instruction if V[" + x + "] does not equal " + "V[" + y + "]");
 
 
 						//if (Vx == NN)
 						if (cpuRegisters[x] != cpuRegisters[y])
 						{
-							Console.WriteLine("skipping...");
+							//Console.WriteLine("skipping...");
 							programCounter += 2;
 						}
 
@@ -480,7 +484,7 @@ namespace Chip8
 
 						 nnn = opCodeStr.Substring(1);
 
-						Console.WriteLine("Set Index to " + nnn);
+						if (DebugMode) Console.WriteLine("Set Index to " + nnn);
 
 						index = (ushort)Convert.ToInt32(nnn, 16);
 
@@ -500,7 +504,7 @@ namespace Chip8
 
 							programCounter = (ushort)(cpuRegisters[0] + jump);
 
-							Console.WriteLine("BNNN: Jumping to " + programCounter);
+							if (DebugMode) Console.WriteLine("BNNN: Jumping to " + programCounter);
 						} else
 						{
 							nnn = opCodeStr.Substring(1);
@@ -510,7 +514,7 @@ namespace Chip8
 							programCounter = (ushort)(cpuRegisters[x] + jump);
 
 
-							Console.WriteLine("BXNN: Jumping to " + programCounter);
+							if (DebugMode) Console.WriteLine("BXNN: Jumping to " + programCounter);
 
 						}
 
@@ -528,7 +532,7 @@ namespace Chip8
 						x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
 						nn = opCodeStr.Substring(2);
 
-						Console.WriteLine("Generating Random Number to V["+x+"] & "+nn);
+						if (DebugMode) Console.WriteLine("Generating Random Number to V["+x+"] & "+nn);
 
 						Random random = new Random();
 
@@ -555,7 +559,7 @@ namespace Chip8
 						int n = Convert.ToInt32(opCodeStr[3] + "", 16);
 
 
-						Console.WriteLine("Drawing " + n + " pixels long ");
+						if (DebugMode) Console.WriteLine("Drawing " + n + " pixels long ");
 
 						int newX = cpuRegisters[x] & 63;
 						int newY = cpuRegisters[y] & 31;
@@ -697,7 +701,7 @@ namespace Chip8
 							//font time!
 							case 0x29:
 
-								Console.WriteLine("Getting font: "+x);
+								if (DebugMode) Console.WriteLine("Getting font: "+x);
 
 								index =  (ushort)(80 + x);
 
@@ -770,7 +774,7 @@ namespace Chip8
 								//KeyEntered = false;
 								//this is going to be interesting...
 
-								Console.WriteLine("Awaiting Key Input");
+								if (DebugMode) Console.WriteLine("Awaiting Key Input");
 
 
 								//test mode
@@ -795,7 +799,7 @@ namespace Chip8
 							//FX1E
 							case 0x1E:
 
-								Console.WriteLine("Index will get the value in VX added to it");
+								if (DebugMode) Console.WriteLine("Index will get the value in VX added to it");
 								
 
 								index = (ushort)(index + cpuRegisters[x]);

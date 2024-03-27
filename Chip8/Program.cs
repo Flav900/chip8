@@ -190,21 +190,21 @@ namespace Chip8
                         */
 
                         case SDL.SDL_Keycode.SDLK_1:
-                                Console.WriteLine("1 key was pressed.");
+							if (chip8.DebugMode) Console.WriteLine("1 key was pressed.");
 
                                 handleKeyInput(0x1);
 
                                 break;
 
                         case SDL.SDL_Keycode.SDLK_2:
-                            Console.WriteLine("2 key was pressed.");
+							if (chip8.DebugMode) Console.WriteLine("2 key was pressed.");
 
                             handleKeyInput(0x2);
 
                             break;
 
                         case SDL.SDL_Keycode.SDLK_3:
-                            Console.WriteLine("3 key was pressed.");
+							if (chip8.DebugMode) Console.WriteLine("3 key was pressed.");
 
                             handleKeyInput(0x3);
 
@@ -212,7 +212,7 @@ namespace Chip8
 
 
                         case SDL.SDL_Keycode.SDLK_4:
-                            Console.WriteLine("C key was pressed.");
+							if (chip8.DebugMode) Console.WriteLine("C key was pressed.");
 
                             handleKeyInput(0xC);
 
@@ -220,7 +220,7 @@ namespace Chip8
 
 
                             case SDL.SDL_Keycode.SDLK_q:
-                            Console.WriteLine("4 key was pressed.");
+							if (chip8.DebugMode) Console.WriteLine("4 key was pressed.");
 
                             handleKeyInput(0x4);
 
@@ -228,14 +228,14 @@ namespace Chip8
 
 
                         case SDL.SDL_Keycode.SDLK_w:
-                            Console.WriteLine("5 key was pressed.");
+							if (chip8.DebugMode) Console.WriteLine("5 key was pressed.");
 
                             handleKeyInput(0x5);
 
                             break;
 
                         case SDL.SDL_Keycode.SDLK_e:
-                            Console.WriteLine("6 key was pressed.");
+							if (chip8.DebugMode) Console.WriteLine("6 key was pressed.");
 
                             handleKeyInput(0x6);
 
@@ -243,7 +243,7 @@ namespace Chip8
 
 
                         case SDL.SDL_Keycode.SDLK_r:
-                            Console.WriteLine("D key was pressed.");
+							if (chip8.DebugMode) Console.WriteLine("D key was pressed.");
 
                             handleKeyInput(0xD);
 
@@ -251,14 +251,14 @@ namespace Chip8
 
 
                         case SDL.SDL_Keycode.SDLK_a:
-                            Console.WriteLine("7 key was pressed.");
+							if (chip8.DebugMode) Console.WriteLine("7 key was pressed.");
 
                             handleKeyInput(0x7);
 
                             break;
 
                         case SDL.SDL_Keycode.SDLK_s:
-                            Console.WriteLine("8 key was pressed.");
+							if (chip8.DebugMode) Console.WriteLine("8 key was pressed.");
 
                             handleKeyInput(0x8);
 
@@ -266,14 +266,14 @@ namespace Chip8
 
 
                         case SDL.SDL_Keycode.SDLK_d:
-                            Console.WriteLine("9 key was pressed.");
+							if (chip8.DebugMode) Console.WriteLine("9 key was pressed.");
 
                             handleKeyInput(0x9);
 
                             break;
 
                         case SDL.SDL_Keycode.SDLK_f:
-                            Console.WriteLine("E key was pressed.");
+							if (chip8.DebugMode) Console.WriteLine("E key was pressed.");
 
                             handleKeyInput(0xE);
 
@@ -282,14 +282,14 @@ namespace Chip8
                         //last row
 
                         case SDL.SDL_Keycode.SDLK_z:
-                            Console.WriteLine("A key was pressed.");
+							if (chip8.DebugMode) Console.WriteLine("A key was pressed.");
 
                             handleKeyInput(0xA);
 
                             break;
 
                         case SDL.SDL_Keycode.SDLK_x:
-                            Console.WriteLine("0 key was pressed.");
+							if (chip8.DebugMode) Console.WriteLine("0 key was pressed.");
 
                             handleKeyInput(0x0);
 
@@ -297,14 +297,14 @@ namespace Chip8
 
 
                         case SDL.SDL_Keycode.SDLK_c:
-                            Console.WriteLine("B key was pressed.");
+							if (chip8.DebugMode) Console.WriteLine("B key was pressed.");
 
                             handleKeyInput(0xB);
 
                             break;
 
                         case SDL.SDL_Keycode.SDLK_v:
-                            Console.WriteLine("F key was pressed.");
+							if (chip8.DebugMode) Console.WriteLine("F key was pressed.");
 
                             handleKeyInput(0xF);
 
