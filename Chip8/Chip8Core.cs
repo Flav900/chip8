@@ -30,7 +30,7 @@ namespace Chip8
 	    ushort[,] display = new ushort[64,32]; //1 or 0, black or white
 
 
-		byte delayTimer;
+		byte delayTimer = 0;
 		byte soundTimer =0;
 
 
@@ -50,6 +50,8 @@ namespace Chip8
 		public bool DebugMode { get; set; }
 
 		public int KeyCpuIndex { get; set; }
+
+		public int KeyBeingPressed { get; set; }
 
 
 		// Font data
@@ -112,6 +114,8 @@ namespace Chip8
 				byte[] chunk = { memory[programCounter], memory[programCounter + 1] };
 
 				programCounter += 2; //less error prone to put it here at the top
+
+				//delayTimer += 60;
 
 
 				// Convert it to Big Endian if its in little endian, should fix read bug
@@ -815,16 +819,52 @@ namespace Chip8
 
 						break;
 
+					case 0xE:
+
+						x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+
+						int evalue = Convert.ToInt32(opCodeStr.Substring(2, 2), 16);
+
+						//	Console.WriteLine("evalue "+ evalue);
+
+						switch (evalue)
+						{
+							case 0x9E:
+								//EX9E will skip one instruction (increment PC by 2) if the key corresponding to the value in VX is pressed.
+
+								value = cpuRegisters[x];
+
+								if(KeyBeingPressed==value)
+								{
+									programCounter += 2;
+								}
+
+								break;
+
+							case 0xA1:
+								//EXA1 skips (increment PC by 2) if the key corresponding to the value in VX is not pressed.
+								value = cpuRegisters[x];
+
+								if (KeyBeingPressed != value)
+								{
+									programCounter += 2;
+								}
+
+
+								break;
+						}
+						break;
+
 
 
 					/*opcodes that still have to added
-				
-					 
-					 * EX9E, EXA1 - Skip if key
-					 * FX07, FX15, FX18 - timers
-					 * FX0A - key
-					 * FX29 - font 
-					
+
+
+					 * EX9E, EXA1 - Skip if key(working)
+					 * FX07, FX15, FX18 - timers ( check)
+					 * FX0A - key (working)
+					 * FX29 - font  (check)
+
 					 * */
 
 

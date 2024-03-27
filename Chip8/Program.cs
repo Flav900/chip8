@@ -275,9 +275,9 @@ namespace Chip8
 
 
                         case SDL.SDL_Keycode.SDLK_c:
-                            Console.WriteLine("C key was pressed.");
+                            Console.WriteLine("B key was pressed.");
 
-                            handleKeyInput(0xC);
+                            handleKeyInput(0xB);
 
                             break;
 
@@ -296,6 +296,8 @@ namespace Chip8
 
             void handleKeyInput(int numValue)
             {
+                chip8.KeyBeingPressed = numValue;
+
                 if (chip8.CanWaitForInput)
                 {
                     chip8.updateCpuRegistry((byte)numValue);
