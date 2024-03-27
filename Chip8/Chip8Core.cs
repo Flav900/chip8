@@ -664,15 +664,37 @@ namespace Chip8
 						switch (fvalue)
 						{
 
+							//timers
+
+							case 0x07:
+
+								cpuRegisters[x] = delayTimer;
+
+							break;
+
+
+							case 0x15:
+
+								delayTimer = cpuRegisters[x];
+
+							break;
+
+
+							case 0x18:
+
+								soundTimer = cpuRegisters[x];
+
+							break;
+
+
+
 							//font time!
 							case 0x29:
 
-								Console.WriteLine("getting font "+x);
-
+								Console.WriteLine("Getting font: "+x);
 
 								index =  (ushort)(80 + x);
 
-								// i need to double check what happens for an overflow here
 								break;
 
 
