@@ -64,10 +64,14 @@ namespace Chip8
             //is this overkill? Probably, but its fun
             GameFixes.gameFix(chip8, filename);
 
-            while (running)
+			const uint desiredFrameTime = 1000 / 700; // 700fps
+			uint lastTimerDecrement = SDL_GetTicks();
+
+			while (running)
             {
-              
-                chip8.doCycle();
+				uint startTick = SDL_GetTicks();
+
+				chip8.doCycle();
 
                 PollEvents();
 
@@ -77,8 +81,22 @@ namespace Chip8
                     chip8.CanDraw = false;
 				}
 
-             
-            }
+
+                //timings
+				uint frameTicks = SDL_GetTicks() - startTick;
+				if (frameTicks < desiredFrameTime)
+				{
+					SDL_Delay(desiredFrameTime - frameTicks);
+				}
+
+				// Decrement delay timer at 60Hz
+				if (SDL_GetTicks() - lastTimerDecrement >= 1000 / 60)
+				{
+					chip8.decrementTimer();
+					lastTimerDecrement = SDL_GetTicks();
+				}
+
+			}
 
             CleanUp();
 

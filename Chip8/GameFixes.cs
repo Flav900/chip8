@@ -17,6 +17,8 @@ namespace Chip8
 			switch(filename)
 			{
 				case "8ceattourny_d1.ch8":
+				case "8ceattourny_d2.ch8":
+				case "8ceattourny_d3.ch8":
 					chip8.OldChip8Behaviour = true;
 					break;
 				default:

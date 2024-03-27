@@ -126,9 +126,11 @@ namespace Chip8
 
 				string opCodeStr = BitConverter.ToUInt16(chunk, 0).ToString("X4"); // "X4" for 4 digits
 
+				if(DebugMode) { 
 				Console.WriteLine("Opcode: "+opCodeStr);
+				}
 
-				 opCode = Convert.ToUInt16(opCodeStr, 16);
+				opCode = Convert.ToUInt16(opCodeStr, 16);
 
 
 				//okay so we use the fancy bitwise operations to still have a switch statement 
@@ -882,8 +884,13 @@ namespace Chip8
 				}
 
 
-
-
+				//timer
+				if (soundTimer > 0)
+				{
+					playSound();
+					soundTimer--;
+				}
+				
 
 
 			} catch(Exception e)
@@ -951,5 +958,24 @@ namespace Chip8
 		}
 		
 
+
+		public void playSound()
+		{
+			//soundTimer
+			//Console.Beep(soundTimer, 60);
+		}
+
+		public byte getDelayTimer ()
+		{
+			return delayTimer;
+		}
+
+		public void decrementTimer()
+		{
+			if (delayTimer > 0)
+			{
+				delayTimer--;
+			}
+		}
 	}
 }
