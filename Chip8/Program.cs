@@ -146,98 +146,236 @@ namespace Chip8
                             Console.WriteLine("Escape key was pressed. Exiting...");
                             running = false;
                             break;
-                     
 
-                            //will need add the keys here
-                        case SDL.SDL_Keycode.SDLK_0:
-                            Console.WriteLine("0 key was pressed.");
 
-                            if(chip8.CanWaitForInput)
-                            {
-                                chip8.updateCpuRegistry(0);
-                                chip8.KeyEntered = true;
-                                chip8.CanWaitForInput = false;
-                            }
+                        //will need add the keys here
+
+                        //We will follow the customary left side of the QWERTY 
+
+                        /* Chip8 keys
+                            1	2	3	C
+                            4	5	6	D
+                            7	8	9	E
+                            A	0	B	F
+                        */
+
+
+                        /* QWERTY 
+                            1	2	3	4
+                            Q	W	E	R
+                            A	S	D	F
+                            Z	X	C	V
+                        */
+
+                        case SDL.SDL_Keycode.SDLK_1:
+                                Console.WriteLine("1 key was pressed.");
+
+                                handleKeyInput(0x1);
+
+                                break;
+
+                        case SDL.SDL_Keycode.SDLK_2:
+                            Console.WriteLine("2 key was pressed.");
+
+                            handleKeyInput(0x2);
 
                             break;
+
+                        case SDL.SDL_Keycode.SDLK_3:
+                            Console.WriteLine("3 key was pressed.");
+
+                            handleKeyInput(0x3);
+
+                            break;
+
+
+                        case SDL.SDL_Keycode.SDLK_4:
+                            Console.WriteLine("C key was pressed.");
+
+                            handleKeyInput(0xC);
+
+                            break;
+
+
+                            case SDL.SDL_Keycode.SDLK_q:
+                            Console.WriteLine("4 key was pressed.");
+
+                            handleKeyInput(0x4);
+
+                            break;
+
+
+                        case SDL.SDL_Keycode.SDLK_w:
+                            Console.WriteLine("5 key was pressed.");
+
+                            handleKeyInput(0x5);
+
+                            break;
+
+                        case SDL.SDL_Keycode.SDLK_e:
+                            Console.WriteLine("6 key was pressed.");
+
+                            handleKeyInput(0x6);
+
+                            break;
+
+
+                        case SDL.SDL_Keycode.SDLK_r:
+                            Console.WriteLine("D key was pressed.");
+
+                            handleKeyInput(0xD);
+
+                            break;
+
+
+                        case SDL.SDL_Keycode.SDLK_a:
+                            Console.WriteLine("7 key was pressed.");
+
+                            handleKeyInput(0x7);
+
+                            break;
+
+                        case SDL.SDL_Keycode.SDLK_s:
+                            Console.WriteLine("8 key was pressed.");
+
+                            handleKeyInput(0x8);
+
+                            break;
+
+
+                        case SDL.SDL_Keycode.SDLK_d:
+                            Console.WriteLine("9 key was pressed.");
+
+                            handleKeyInput(0x9);
+
+                            break;
+
+                        case SDL.SDL_Keycode.SDLK_f:
+                            Console.WriteLine("E key was pressed.");
+
+                            handleKeyInput(0xE);
+
+                            break;
+
+                        //last row
+
+                        case SDL.SDL_Keycode.SDLK_z:
+                            Console.WriteLine("A key was pressed.");
+
+                            handleKeyInput(0xA);
+
+                            break;
+
+                        case SDL.SDL_Keycode.SDLK_x:
+                            Console.WriteLine("0 key was pressed.");
+
+                            handleKeyInput(0x0);
+
+                            break;
+
+
+                        case SDL.SDL_Keycode.SDLK_c:
+                            Console.WriteLine("C key was pressed.");
+
+                            handleKeyInput(0xC);
+
+                            break;
+
+                        case SDL.SDL_Keycode.SDLK_v:
+                            Console.WriteLine("F key was pressed.");
+
+                            handleKeyInput(0xF);
+
+                            break;
+
+                    }
+                    }
+
+                }
+            }
+
+            void handleKeyInput(int numValue)
+            {
+                if (chip8.CanWaitForInput)
+                {
+                    chip8.updateCpuRegistry((byte)numValue);
+                    chip8.KeyEntered = true;
+                    chip8.CanWaitForInput = false;
+                }
+            }
+
+            /// <summary>
+            /// Renders to the window.
+            /// </summary>
+            void Render()
+            {
+                // Sets the color that the screen will be cleared with.
+                SDL.SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+
+                // Clears the current render surface.
+                SDL.SDL_RenderClear(renderer);
+
+
+                //using rects instead of DrawPoint now for better use with the scaling
+                var rect = new SDL.SDL_Rect
+                {
+                    x = 0,
+                    y = 0,
+                    w = scaleFactor,
+                    h = scaleFactor
+                };
+
+
+                display = chip8.getDisplay();
+
+                for (int x = 0; x < display.GetLength(0); x++)
+                {
+                    for (int y = 0; y < display.GetLength(1); y++)
+                    {
+
+                        if (display[x, y] == 1)
+                        {
+
+                            SDL.SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
+                            //SDL.SDL_RenderDrawPoint(renderer, x, y);
+                            rect.x = x * scaleFactor; 
+                            rect.y = y * scaleFactor; 
+
+                            SDL.SDL_RenderFillRect(renderer, ref rect);
+                        }
+
                     }
                 }
 
-            }
-        }
-
-        /// <summary>
-        /// Renders to the window.
-        /// </summary>
-        void Render()
-        {
-            // Sets the color that the screen will be cleared with.
-            SDL.SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-
-            // Clears the current render surface.
-            SDL.SDL_RenderClear(renderer);
+                /* sdl fun, for reference
 
 
-            //using rects instead of DrawPoint now for better use with the scaling
-			var rect = new SDL.SDL_Rect
-			{
-				x = 0,
-				y = 0,
-				w = scaleFactor,
-				h = scaleFactor
-			};
+                // Set the color to red before drawing our shape
+                SDL.SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+
+                // Draws a point at (20, 20) using the currently set color.
+                SDL.SDL_RenderDrawPoint(renderer, 20, 20);
 
 
-			display = chip8.getDisplay();
+                // Draw a line from top left to bottom right
+                SDL.SDL_RenderDrawLine(renderer, 0, 0, 640, 480);
 
-            for (int x = 0; x < display.GetLength(0); x++)
-            {
-                for (int y = 0; y < display.GetLength(1); y++)
+                // Specify the coordinates for our rectangle we will be drawing.
+                var rect = new SDL.SDL_Rect
                 {
-           
-                    if (display[x, y] == 1)
-                    {
+                    x = 300,
+                    y = 100,
+                    w = 50,
+                    h = 50
+                };
 
-                        SDL.SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
-						//SDL.SDL_RenderDrawPoint(renderer, x, y);
-						rect.x = x * scaleFactor; 
-                        rect.y = y * scaleFactor; 
-
-						SDL.SDL_RenderFillRect(renderer, ref rect);
-					}
-
-                }
-            }
-
-            /* sdl fun, for reference
-		
-
-			// Set the color to red before drawing our shape
-			SDL.SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-
-			// Draws a point at (20, 20) using the currently set color.
-			SDL.SDL_RenderDrawPoint(renderer, 20, 20);
+                // Draw a filled in rectangle.
+                SDL.SDL_RenderFillRect(renderer, ref rect);
+                */
 
 
-			// Draw a line from top left to bottom right
-			SDL.SDL_RenderDrawLine(renderer, 0, 0, 640, 480);
-
-			// Specify the coordinates for our rectangle we will be drawing.
-			var rect = new SDL.SDL_Rect
-			{
-				x = 300,
-				y = 100,
-				w = 50,
-				h = 50
-			};
-
-			// Draw a filled in rectangle.
-			SDL.SDL_RenderFillRect(renderer, ref rect);
-            */
-
-
-            // Switches out the currently presented render surface with the one we just did work on.
-            SDL.SDL_RenderPresent(renderer);
+                            // Switches out the currently presented render surface with the one we just did work on.
+                            SDL.SDL_RenderPresent(renderer);
 
 
     

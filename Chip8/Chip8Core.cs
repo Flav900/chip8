@@ -664,6 +664,19 @@ namespace Chip8
 						switch (fvalue)
 						{
 
+							//font time!
+							case 0x29:
+
+								Console.WriteLine("getting font "+x);
+
+
+								index =  (ushort)(80 + x);
+
+								// i need to double check what happens for an overflow here
+								break;
+
+
+
 							case 0x33:
 
 								int decimalNum = cpuRegisters[x];
@@ -761,6 +774,9 @@ namespace Chip8
 
 								// i need to double check what happens for an overflow here
 								break;
+
+
+
 
 							default:
 								Console.WriteLine("Unknown FXXX opCode: " + opCodeStr);
