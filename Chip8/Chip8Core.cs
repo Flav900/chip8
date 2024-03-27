@@ -126,7 +126,7 @@ namespace Chip8
 
 				string nnn,nn;
 
-				int x, y;
+				int x, y, jump;
 
 				switch (nibble)
 				{
@@ -468,6 +468,41 @@ namespace Chip8
 
 					break;
 
+
+
+					case 0xB:
+
+						//
+
+						if(OldChip8Behaviour)
+						{
+							nnn = opCodeStr.Substring(1);
+						    jump = (ushort)Convert.ToInt32(nnn, 16);
+
+							programCounter = (ushort)(cpuRegisters[0] + jump);
+
+							Console.WriteLine("BNNN: Jumping to " + programCounter);
+						} else
+						{
+							nnn = opCodeStr.Substring(1);
+							jump = (ushort)Convert.ToInt32(nnn, 16);
+							x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+
+							programCounter = (ushort)(cpuRegisters[x] + jump);
+
+
+							Console.WriteLine("BXNN: Jumping to " + programCounter);
+
+						}
+
+						
+
+		
+
+
+
+						break;
+
 					case 0xC:
 
 						//
@@ -603,11 +638,91 @@ namespace Chip8
 
 						}
 
+						break;
 
-						//	Console.WriteLine("Draw " + ((n=='F')?"White":"Black") + " at x:" + x + ", y:" + y);
+					case 0xF:
+
+						x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+
+						int fvalue = Convert.ToInt32(opCodeStr.Substring(2, 2));
+
+					//	Console.WriteLine("fvalue "+ fvalue);
+
+						switch (fvalue)
+						{
+
+							case 33:
+
+								int decimalNum = cpuRegisters[x];
+								//Console.WriteLine("Num: " + decimalNum);
 
 
-						//	display[newX, newY] = n;
+
+								int counter = 2;
+
+								while (decimalNum > 0)
+								{
+									int digit = decimalNum % 10;
+									//Console.WriteLine("digit: "+digit);
+
+									memory[index + counter] = (byte)digit;
+									counter--;
+
+									decimalNum /= 10; 
+								}
+
+
+
+								break;
+
+
+
+							//amb
+							case 55:
+
+							//	Console.WriteLine("Storing "+x);
+								
+									for (int i = 0; i <=x; i++)
+									{
+										memory[index + i] = cpuRegisters[i];
+									}
+
+									if (OldChip8Behaviour)
+									{
+										index = (ushort)(index + x + 1);
+									}
+
+
+								break;
+
+
+							case 65:
+							
+									for (int i = 0; i <=x; i++)
+									{
+										cpuRegisters[i] = memory[index + i];
+									}
+
+									if (OldChip8Behaviour)
+									{
+										index = (ushort)(index + x + 1);
+									}
+
+
+								break;
+
+							default:
+								Console.WriteLine("Unknown FXXX opCode: " + opCodeStr);
+
+								if (PauseIfUnknownOpCode)
+								{
+									Console.ReadLine();
+
+								}
+
+							break;
+
+						}
 
 						break;
 
@@ -615,7 +730,7 @@ namespace Chip8
 
 					/*opcodes that still have to added
 				
-					 * BNNN
+					 
 					 * EX9E
 					 * EXA1
 					 * FX07
@@ -624,9 +739,7 @@ namespace Chip8
 					 * FX18
 					 * FX1E
 					 * FX29
-					 * FX33
-					 * FX55
-					 * FX65
+					
 					 * */
 
 
