@@ -36,6 +36,10 @@ namespace Chip8
 
 		public bool CanDraw { get; set; }
 
+		public bool CanWaitForInput { get; set; }
+
+		public bool KeyEntered { get; set; }
+
 		public bool CanStepThroughProcess { get; set; }
 
 		public bool PauseIfUnknownOpCode { get; set; }
@@ -44,6 +48,9 @@ namespace Chip8
 		public bool OldChip8Behaviour { get; set; }
 
 		public bool DebugMode { get; set; }
+
+		public int KeyCpuIndex { get; set; }
+
 
 		// Font data
 		byte[] fontData = new byte[] {
@@ -87,6 +94,7 @@ namespace Chip8
 			OldChip8Behaviour = false;
 			DebugMode = false;
 			PauseIfException = false;
+			KeyEntered = false;
 		}
 
 
@@ -114,7 +122,7 @@ namespace Chip8
 
 				string opCodeStr = BitConverter.ToUInt16(chunk, 0).ToString("X4"); // "X4" for 4 digits
 
-				Console.WriteLine("Opcode: "+opCodeStr);
+			//	Console.WriteLine("Opcode: "+opCodeStr);
 
 				 opCode = Convert.ToUInt16(opCodeStr, 16);
 
@@ -716,6 +724,44 @@ namespace Chip8
 
 								break;
 
+
+							case 0x0A:
+								//KeyEntered = false;
+								//this is going to be interesting...
+
+								Console.WriteLine("Awaiting Key Input");
+
+
+								//test mode
+								//string word = Console.ReadLine();
+								KeyCpuIndex = x;
+
+								if (!KeyEntered)
+								{
+
+									CanWaitForInput = true;
+									programCounter -= 2;
+								}
+
+
+								//	cpuRegisters[x] = 0;
+
+								break;
+
+
+
+
+							//FX1E
+							case 0x1E:
+
+								Console.WriteLine("Index will get the value in VX added to it");
+								
+
+								index = (ushort)(index + cpuRegisters[x]);
+
+								// i need to double check what happens for an overflow here
+								break;
+
 							default:
 								Console.WriteLine("Unknown FXXX opCode: " + opCodeStr);
 
@@ -736,14 +782,10 @@ namespace Chip8
 					/*opcodes that still have to added
 				
 					 
-					 * EX9E
-					 * EXA1
-					 * FX07
-					 * FX0A
-					 * FX15
-					 * FX18
-					 * FX1E
-					 * FX29
+					 * EX9E, EXA1 - Skip if key
+					 * FX07, FX15, FX18 - timers
+					 * FX0A - key
+					 * FX29 - font 
 					
 					 * */
 
@@ -819,6 +861,17 @@ namespace Chip8
 				}
 			}
 		}
+
+		public void updateCpuRegistry(int index, byte value)
+		{
+			cpuRegisters[index] = value;
+		}
+
+		public void updateCpuRegistry(byte value)
+		{
+			updateCpuRegistry(KeyCpuIndex, value);
+		}
+		
 
 	}
 }

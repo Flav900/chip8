@@ -134,6 +134,35 @@ namespace Chip8
                         running = false;
                         break;
                 }
+
+                if (e.type == SDL.SDL_EventType.SDL_KEYDOWN)
+                {
+                    // Check which key was pressed
+                    switch (e.key.keysym.sym)
+                    {
+                      
+                        case SDL.SDL_Keycode.SDLK_ESCAPE:
+                          
+                            Console.WriteLine("Escape key was pressed. Exiting...");
+                            running = false;
+                            break;
+                     
+
+                            //will need add the keys here
+                        case SDL.SDL_Keycode.SDLK_0:
+                            Console.WriteLine("0 key was pressed.");
+
+                            if(chip8.CanWaitForInput)
+                            {
+                                chip8.updateCpuRegistry(0);
+                                chip8.KeyEntered = true;
+                                chip8.CanWaitForInput = false;
+                            }
+
+                            break;
+                    }
+                }
+
             }
         }
 
