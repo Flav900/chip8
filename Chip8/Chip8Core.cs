@@ -860,10 +860,10 @@ namespace Chip8
 					/*opcodes that still have to added
 
 
-					 * EX9E, EXA1 - Skip if key(working)
-					 * FX07, FX15, FX18 - timers ( check)
-					 * FX0A - key (working)
-					 * FX29 - font  (check)
+					 * EX9E, EXA1 - Skip if key(test)
+					 * FX07, FX15, FX18 - timers ( test, implement timers)
+					 * FX0A - key (test)
+					 * FX29 - font (test)
 
 					 * */
 
