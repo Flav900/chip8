@@ -27,7 +27,7 @@ namespace Chip8
         // string filename = "C:/Projects/Chip8/IBM_Logo.ch8";
 
     
-        bool showFileDialog = false; //Debug
+        bool showFileDialog = true; //Debug
         Program()
         {
 
@@ -58,6 +58,7 @@ namespace Chip8
 			chip8.CanStepThroughProcess = false; //for debug purposes
             chip8.PauseIfUnknownOpCode = true; //for debug purposes
             chip8.OldChip8Behaviour = false;
+            chip8.PauseIfException = true;
 
             while (running)
             {

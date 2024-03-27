@@ -40,7 +40,7 @@ namespace Chip8
 
 		public bool PauseIfUnknownOpCode { get; set; }
 
-
+		public bool PauseIfException { get; set; }
 		public bool OldChip8Behaviour { get; set; }
 
 		public bool DebugMode { get; set; }
@@ -86,6 +86,7 @@ namespace Chip8
 			PauseIfUnknownOpCode = false;
 			OldChip8Behaviour = false;
 			DebugMode = false;
+			PauseIfException = false;
 		}
 
 
@@ -113,7 +114,7 @@ namespace Chip8
 
 				string opCodeStr = BitConverter.ToUInt16(chunk, 0).ToString("X4"); // "X4" for 4 digits
 
-				//Console.WriteLine(opCodeStr);
+				Console.WriteLine("Opcode: "+opCodeStr);
 
 				 opCode = Convert.ToUInt16(opCodeStr, 16);
 
@@ -344,20 +345,24 @@ namespace Chip8
 
 								int result = cpuRegisters[x] + cpuRegisters[y];
 
-								cpuRegisters[x] = (byte)(result); //must fix overflow here
+								
 
 								//flag is set here..
 								//if overflows
 
 								if (result > 255)
 								{
+									result = result % 256;
+
 									carryFlag = 1;
 								} else
 								{
 									carryFlag = 0;
 								}
 
-							break;
+								cpuRegisters[x] = (byte)(result); //must fix overflow here
+
+								break;
 
 
 							case 5:
@@ -644,14 +649,14 @@ namespace Chip8
 
 						x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
 
-						int fvalue = Convert.ToInt32(opCodeStr.Substring(2, 2));
+						int fvalue = Convert.ToInt32(opCodeStr.Substring(2, 2), 16);
 
 					//	Console.WriteLine("fvalue "+ fvalue);
 
 						switch (fvalue)
 						{
 
-							case 33:
+							case 0x33:
 
 								int decimalNum = cpuRegisters[x];
 								//Console.WriteLine("Num: " + decimalNum);
@@ -678,7 +683,7 @@ namespace Chip8
 
 
 							//amb
-							case 55:
+							case 0x55:
 
 							//	Console.WriteLine("Storing "+x);
 								
@@ -696,7 +701,7 @@ namespace Chip8
 								break;
 
 
-							case 65:
+							case 0x65:
 							
 									for (int i = 0; i <=x; i++)
 									{
@@ -763,7 +768,13 @@ namespace Chip8
 
 			} catch(Exception e)
 			{
+				Console.WriteLine("Exception, Opcode:" + opCode);
 				Console.WriteLine("Error: " + e);
+
+				if(PauseIfException)
+				{
+					Console.ReadLine();
+				}
 			}
 
 			//I'll need to implemnent the delay timer here
