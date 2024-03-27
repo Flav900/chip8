@@ -88,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Chip8Core.cs" />
+    <Compile Include="GameFixes.cs" />
     <Compile Include="Testing\FileRead.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -126,7 +126,7 @@ namespace Chip8
 
 				string opCodeStr = BitConverter.ToUInt16(chunk, 0).ToString("X4"); // "X4" for 4 digits
 
-			//	Console.WriteLine("Opcode: "+opCodeStr);
+				Console.WriteLine("Opcode: "+opCodeStr);
 
 				 opCode = Convert.ToUInt16(opCodeStr, 16);
 
@@ -311,7 +311,7 @@ namespace Chip8
 
 						switch(value)
 						{
-							case 0:
+							case 0x0:
 
 								//VX is set to the value of VY.
 
@@ -320,7 +320,7 @@ namespace Chip8
 								break;
 
 
-							case 1:
+							case 0x1:
 
 								//VX is set to the bitwise/binary logical disjunction (OR) of VX and VY. VY is not affected.
 
@@ -330,7 +330,7 @@ namespace Chip8
 								break;
 
 
-							case 2:
+							case 0x2:
 
 								//VX is set to the bitwise/binary logical conjunction (AND) of VX and VY. VY is not affected.
 
@@ -340,7 +340,7 @@ namespace Chip8
 								break;
 
 
-							case 3:
+							case 0x3:
 
 								//VX is set to the bitwise/binary exclusive OR (XOR) of VX and VY. VY is not affected.
 
@@ -351,7 +351,7 @@ namespace Chip8
 
 
 
-							case 4:
+							case 0x4:
 
 								//VX is set to the value of VX plus the value of VY. VY is not affected.
 
@@ -377,7 +377,7 @@ namespace Chip8
 								break;
 
 
-							case 5:
+							case 0x5:
 
 								//Sets VX to the result of VX - VY
 
@@ -391,7 +391,7 @@ namespace Chip8
 							break;
 
 
-							case 7:
+							case 0x7:
 
 								//Sets VX to the result of VX - VY
 
@@ -404,7 +404,7 @@ namespace Chip8
 
 
 							//Ambiguous
-							case 6:
+							case 0x6:
 								//Shift the value in VX, 1 bit to the right
 
 								if (OldChip8Behaviour)
