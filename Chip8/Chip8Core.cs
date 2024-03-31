@@ -368,7 +368,7 @@ namespace Chip8
 
 								if (result > 255)
 								{
-									result = result % 256;
+									//result = result % 256;
 
 									cpuRegisters[0x0F] = 1;
 								} else
@@ -385,21 +385,14 @@ namespace Chip8
 
 								//Sets VX to the result of VX - VY
 
+								
+
 								cpuRegisters[x] = (byte)(cpuRegisters[x] - cpuRegisters[y]);
 
-								//flag is set here..
-
-								if(cpuRegisters[x] > cpuRegisters[y])
-								{
-									cpuRegisters[0x0F] = 1;
-								}
+								//flag 
+								cpuRegisters[0x0F] = cpuRegisters[x] >= cpuRegisters[y] ? (byte)1 : (byte)0;
 
 
-								if (cpuRegisters[y] > cpuRegisters[x])
-								{
-									//and underflow?
-									cpuRegisters[0x0F] = 0;
-								}
 
 								break;
 
@@ -407,13 +400,14 @@ namespace Chip8
 							case 0x7:
 
 								//Sets VX to the result of VX - VY
-
 								cpuRegisters[x] = (byte)(cpuRegisters[y] - cpuRegisters[x]);
 
 								//flag is set here..
+							
+								cpuRegisters[0x0F] = (cpuRegisters[y] >= cpuRegisters[x]) ? (byte)1 : (byte)0;
 
 
-							break;
+								break;
 
 
 							//Ambiguous
