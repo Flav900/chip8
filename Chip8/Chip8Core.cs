@@ -16,8 +16,6 @@ namespace Chip8
 		ushort index; //I
 		ushort programCounter = 512;
 
-		ushort carryFlag;//VF
-
 		byte[] memory = new byte[4096];
 
 		byte[] cpuRegisters = new byte[16];//V
@@ -372,10 +370,10 @@ namespace Chip8
 								{
 									result = result % 256;
 
-									carryFlag = 1;
+									cpuRegisters[0x0F] = 1;
 								} else
 								{
-									carryFlag = 0;
+									cpuRegisters[0x0F] = 0;
 								}
 
 								cpuRegisters[x] = (byte)(result); //must fix overflow here
@@ -391,10 +389,19 @@ namespace Chip8
 
 								//flag is set here..
 
+								if(cpuRegisters[x] > cpuRegisters[y])
+								{
+									cpuRegisters[0x0F] = 1;
+								}
 
 
+								if (cpuRegisters[y] > cpuRegisters[x])
+								{
+									//and underflow?
+									cpuRegisters[0x0F] = 0;
+								}
 
-							break;
+								break;
 
 
 							case 0x7:
@@ -413,6 +420,10 @@ namespace Chip8
 							case 0x6:
 								//Shift the value in VX, 1 bit to the right
 
+
+								//Set V[F] to 1 if the bit that was shifted out was 1, or 0 if it was 0
+								cpuRegisters[0x0F] = (byte)(cpuRegisters[x] & 1);
+
 								if (OldChip8Behaviour)
 								{
 									cpuRegisters[x] = cpuRegisters[y];
@@ -420,13 +431,16 @@ namespace Chip8
 
 								cpuRegisters[x] >>= 1;
 
-								//Set VF to 1 if the bit that was shifted out was 1, or 0 if it was 0
 
 								break;
 
 							//Ambiguous
+
+
 							case 0x0E:
-								//Shift the value in VX, 1 bit to the left
+								//Set V[F] to 1 if the bit that was shifted out was 1, or 0 if it was 0
+								cpuRegisters[0x0F] = (byte)((cpuRegisters[x] & 0x80) >> 7); 
+
 
 								if (OldChip8Behaviour)
 								{
@@ -435,7 +449,8 @@ namespace Chip8
 
 								cpuRegisters[x] <<= 1;
 
-								//Set VF to 1 if the bit that was shifted out was 1, or 0 if it was 0
+							
+
 								break;
 
 							default:
@@ -565,6 +580,8 @@ namespace Chip8
 						int newY = cpuRegisters[y] & 31;
 
 
+						cpuRegisters[0x0F] = 0;
+
 						int startNewX = newX;
 
 
@@ -621,6 +638,8 @@ namespace Chip8
 									{
 										display[newX, newY] = 0;
 										//CanDraw = true;
+
+										cpuRegisters[0x0F] = 1;
 									}
 									else
 									{
