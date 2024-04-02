@@ -26,6 +26,15 @@ namespace Chip8
         bool showFileDialog = false; //Debug
 
 
+        public SDLPanel()
+        {
+           //Hopefully fixes the input
+            this.SetStyle(ControlStyles.Selectable, true);
+            this.TabStop = true;
+        }
+
+
+
         protected override void OnHandleCreated(EventArgs e)
         {
             base.OnHandleCreated(e);
