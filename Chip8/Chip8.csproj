@@ -92,6 +92,15 @@
   <ItemGroup>
     <Compile Include="Chip8Core.cs" />
     <Compile Include="GameFixes.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SDLPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Testing\FileRead.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -117,6 +126,11 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Sayers.SDL2.Core.1.0.11\build\Sayers.SDL2.Core.targets" Condition="Exists('..\packages\Sayers.SDL2.Core.1.0.11\build\Sayers.SDL2.Core.targets')" />

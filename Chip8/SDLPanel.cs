@@ -1,45 +1,69 @@
-﻿//Flav
-
-using System;
-using System.Windows.Forms;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Chip8;
+using System.Windows.Forms;
 using SDL2;
 using static SDL2.SDL;
 
 namespace Chip8
 {
-    class Program
+    public class SDLPanel : Panel
     {
+
+
         IntPtr window;
         IntPtr renderer;
         bool running = true;
         ushort[,] display;
         int scaleFactor = 10;
 
-		Chip8Core chip8 = new Chip8Core();
+        Chip8Core chip8;
 
-        string filename = ""; //C:/Projects/Chip8/test_opcode.ch8
+       // string filename = ""; //C:/Projects/Chip8/test_opcode.ch8
+
+        bool showFileDialog = false; //Debug
+
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            SDL.SDL_Init(SDL.SDL_INIT_VIDEO);
+             window = SDL.SDL_CreateWindowFrom(Handle);
+             renderer = SDL.SDL_CreateRenderer(window, -1, 
+                SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED |
+                SDL.SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC);
+            
+        }
+
+        protected override void OnHandleDestroyed(EventArgs e)
+        {
+            // Clean up SDL resources
+            SDL.SDL_Quit();
+            base.OnHandleDestroyed(e);
+        }
 
 
 
+        public void Stop()
+        {
+            running = false;
+        }
 
-		bool showFileDialog = true; //Debug
-        Program()
+
+        public void Start(string filename)
         {
 
             if (showFileDialog)
             {
-                
+
 
                 OpenFileDialog openFileDialog = new OpenFileDialog
                 {
-					// InitialDirectory = "C:\\Projects\\Chip8", //Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-					InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-					Title = "Select a file",
+                    // InitialDirectory = "C:\\Projects\\Chip8", //Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                    InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                    Title = "Select a file",
                     Filter = "All files (*.*)|*.*",
                     RestoreDirectory = true
                 };
@@ -47,22 +71,23 @@ namespace Chip8
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     filename = openFileDialog.FileName;
-                    Console.WriteLine("Loading "+filename+"...");
+                    Console.WriteLine("Loading " + filename + "...");
 
                 }
             }
 
-            if(filename.Length == 0)
+            if (filename.Length == 0)
             {
-				Console.WriteLine("Specify a filename.");
-				return;
+                Console.WriteLine("Specify a filename.");
+                return;
             }
 
+            chip8 = new Chip8Core();
 
-            Setup();
+            // Setup();
             chip8.init(filename);
 
-			chip8.CanStepThroughProcess = false; //for debug purposes
+            chip8.CanStepThroughProcess = false; //for debug purposes
             chip8.PauseIfUnknownOpCode = false; //for debug purposes
             chip8.OldChip8Behaviour = false;
             chip8.PauseIfException = true;
@@ -71,39 +96,41 @@ namespace Chip8
             //is this overkill? Probably, but its fun
             GameFixes.gameFix(chip8, filename);
 
-			const uint desiredFrameTime = 1000 / 700; // 700fps
-			uint lastTimerDecrement = SDL_GetTicks();
+            const uint desiredFrameTime = 1000 / 700; // 700fps
+            uint lastTimerDecrement = SDL_GetTicks();
 
-			while (running)
+            running = true;
+
+            while (running)
             {
-				uint startTick = SDL_GetTicks();
+                uint startTick = SDL_GetTicks();
 
-				chip8.doCycle();
+                chip8.doCycle();
 
                 PollEvents();
 
-                if(chip8.CanDraw)
+                if (chip8.CanDraw)
                 {
-					Render();
+                    Render();
                     chip8.CanDraw = false;
-				}
+                }
 
 
                 //timings
-				uint frameTicks = SDL_GetTicks() - startTick;
-				if (frameTicks < desiredFrameTime)
-				{
-					SDL_Delay(desiredFrameTime - frameTicks);
-				}
+                uint frameTicks = SDL_GetTicks() - startTick;
+                if (frameTicks < desiredFrameTime)
+                {
+                    SDL_Delay(desiredFrameTime - frameTicks);
+                }
 
-				// Decrement delay timer at 60Hz
-				if (SDL_GetTicks() - lastTimerDecrement >= 1000 / 60)
-				{
-					chip8.decrementTimer();
-					lastTimerDecrement = SDL_GetTicks();
-				}
+                // Decrement delay timer at 60Hz
+                if (SDL_GetTicks() - lastTimerDecrement >= 1000 / 60)
+                {
+                    chip8.decrementTimer();
+                    lastTimerDecrement = SDL_GetTicks();
+                }
 
-			}
+            }
 
             CleanUp();
 
@@ -149,6 +176,7 @@ namespace Chip8
             }
         }
 
+
         /// <summary>
         /// Checks to see if there are any events to be processed.
         /// </summary>
@@ -169,9 +197,9 @@ namespace Chip8
                     // Check which key was pressed
                     switch (e.key.keysym.sym)
                     {
-                      
+
                         case SDL.SDL_Keycode.SDLK_ESCAPE:
-                          
+
                             Console.WriteLine("Escape key was pressed. Exiting...");
                             running = false;
                             break;
@@ -197,21 +225,21 @@ namespace Chip8
                         */
 
                         case SDL.SDL_Keycode.SDLK_1:
-							if (chip8.DebugMode) Console.WriteLine("1 key was pressed.");
+                            if (chip8.DebugMode) Console.WriteLine("1 key was pressed.");
 
-                                handleKeyInput(0x1);
+                            handleKeyInput(0x1);
 
-                                break;
+                            break;
 
                         case SDL.SDL_Keycode.SDLK_2:
-							if (chip8.DebugMode) Console.WriteLine("2 key was pressed.");
+                            if (chip8.DebugMode) Console.WriteLine("2 key was pressed.");
 
                             handleKeyInput(0x2);
 
                             break;
 
                         case SDL.SDL_Keycode.SDLK_3:
-							if (chip8.DebugMode) Console.WriteLine("3 key was pressed.");
+                            if (chip8.DebugMode) Console.WriteLine("3 key was pressed.");
 
                             handleKeyInput(0x3);
 
@@ -219,15 +247,15 @@ namespace Chip8
 
 
                         case SDL.SDL_Keycode.SDLK_4:
-							if (chip8.DebugMode) Console.WriteLine("C key was pressed.");
+                            if (chip8.DebugMode) Console.WriteLine("C key was pressed.");
 
                             handleKeyInput(0xC);
 
                             break;
 
 
-                            case SDL.SDL_Keycode.SDLK_q:
-							if (chip8.DebugMode) Console.WriteLine("4 key was pressed.");
+                        case SDL.SDL_Keycode.SDLK_q:
+                            if (chip8.DebugMode) Console.WriteLine("4 key was pressed.");
 
                             handleKeyInput(0x4);
 
@@ -235,14 +263,14 @@ namespace Chip8
 
 
                         case SDL.SDL_Keycode.SDLK_w:
-							if (chip8.DebugMode) Console.WriteLine("5 key was pressed.");
+                            if (chip8.DebugMode) Console.WriteLine("5 key was pressed.");
 
                             handleKeyInput(0x5);
 
                             break;
 
                         case SDL.SDL_Keycode.SDLK_e:
-							if (chip8.DebugMode) Console.WriteLine("6 key was pressed.");
+                            if (chip8.DebugMode) Console.WriteLine("6 key was pressed.");
 
                             handleKeyInput(0x6);
 
@@ -250,7 +278,7 @@ namespace Chip8
 
 
                         case SDL.SDL_Keycode.SDLK_r:
-							if (chip8.DebugMode) Console.WriteLine("D key was pressed.");
+                            if (chip8.DebugMode) Console.WriteLine("D key was pressed.");
 
                             handleKeyInput(0xD);
 
@@ -258,14 +286,14 @@ namespace Chip8
 
 
                         case SDL.SDL_Keycode.SDLK_a:
-							if (chip8.DebugMode) Console.WriteLine("7 key was pressed.");
+                            if (chip8.DebugMode) Console.WriteLine("7 key was pressed.");
 
                             handleKeyInput(0x7);
 
                             break;
 
                         case SDL.SDL_Keycode.SDLK_s:
-							if (chip8.DebugMode) Console.WriteLine("8 key was pressed.");
+                            if (chip8.DebugMode) Console.WriteLine("8 key was pressed.");
 
                             handleKeyInput(0x8);
 
@@ -273,14 +301,14 @@ namespace Chip8
 
 
                         case SDL.SDL_Keycode.SDLK_d:
-							if (chip8.DebugMode) Console.WriteLine("9 key was pressed.");
+                            if (chip8.DebugMode) Console.WriteLine("9 key was pressed.");
 
                             handleKeyInput(0x9);
 
                             break;
 
                         case SDL.SDL_Keycode.SDLK_f:
-							if (chip8.DebugMode) Console.WriteLine("E key was pressed.");
+                            if (chip8.DebugMode) Console.WriteLine("E key was pressed.");
 
                             handleKeyInput(0xE);
 
@@ -289,14 +317,14 @@ namespace Chip8
                         //last row
 
                         case SDL.SDL_Keycode.SDLK_z:
-							if (chip8.DebugMode) Console.WriteLine("A key was pressed.");
+                            if (chip8.DebugMode) Console.WriteLine("A key was pressed.");
 
                             handleKeyInput(0xA);
 
                             break;
 
                         case SDL.SDL_Keycode.SDLK_x:
-							if (chip8.DebugMode) Console.WriteLine("0 key was pressed.");
+                            if (chip8.DebugMode) Console.WriteLine("0 key was pressed.");
 
                             handleKeyInput(0x0);
 
@@ -304,113 +332,113 @@ namespace Chip8
 
 
                         case SDL.SDL_Keycode.SDLK_c:
-							if (chip8.DebugMode) Console.WriteLine("B key was pressed.");
+                            if (chip8.DebugMode) Console.WriteLine("B key was pressed.");
 
                             handleKeyInput(0xB);
 
                             break;
 
                         case SDL.SDL_Keycode.SDLK_v:
-							if (chip8.DebugMode) Console.WriteLine("F key was pressed.");
+                            if (chip8.DebugMode) Console.WriteLine("F key was pressed.");
 
                             handleKeyInput(0xF);
 
                             break;
 
                     }
-                    }
-
                 }
+
             }
+        }
 
-            void handleKeyInput(int numValue)
+        void handleKeyInput(int numValue)
+        {
+            chip8.KeyBeingPressed = numValue;
+
+            if (chip8.CanWaitForInput)
             {
-                chip8.KeyBeingPressed = numValue;
-
-                if (chip8.CanWaitForInput)
-                {
-                    chip8.updateCpuRegistry((byte)numValue);
-                    chip8.KeyEntered = true;
-                    chip8.CanWaitForInput = false;
-                }
+                chip8.updateCpuRegistry((byte)numValue);
+                chip8.KeyEntered = true;
+                chip8.CanWaitForInput = false;
             }
+        }
 
-            /// <summary>
-            /// Renders to the window.
-            /// </summary>
-            void Render()
+        /// <summary>
+        /// Renders to the window.
+        /// </summary>
+        void Render()
+        {
+            // Sets the color that the screen will be cleared with.
+            SDL.SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+
+            // Clears the current render surface.
+            SDL.SDL_RenderClear(renderer);
+
+
+            //using rects instead of DrawPoint now for better use with the scaling
+            var rect = new SDL.SDL_Rect
             {
-                // Sets the color that the screen will be cleared with.
-                SDL.SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+                x = 0,
+                y = 0,
+                w = scaleFactor,
+                h = scaleFactor
+            };
 
-                // Clears the current render surface.
-                SDL.SDL_RenderClear(renderer);
 
+            display = chip8.getDisplay();
 
-                //using rects instead of DrawPoint now for better use with the scaling
-                var rect = new SDL.SDL_Rect
+            for (int x = 0; x < display.GetLength(0); x++)
+            {
+                for (int y = 0; y < display.GetLength(1); y++)
                 {
-                    x = 0,
-                    y = 0,
-                    w = scaleFactor,
-                    h = scaleFactor
-                };
 
-
-                display = chip8.getDisplay();
-
-                for (int x = 0; x < display.GetLength(0); x++)
-                {
-                    for (int y = 0; y < display.GetLength(1); y++)
+                    if (display[x, y] == 1)
                     {
 
-                        if (display[x, y] == 1)
-                        {
+                        SDL.SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
+                        //SDL.SDL_RenderDrawPoint(renderer, x, y);
+                        rect.x = x * scaleFactor;
+                        rect.y = y * scaleFactor;
 
-                            SDL.SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
-                            //SDL.SDL_RenderDrawPoint(renderer, x, y);
-                            rect.x = x * scaleFactor; 
-                            rect.y = y * scaleFactor; 
-
-                            SDL.SDL_RenderFillRect(renderer, ref rect);
-                        }
-
+                        SDL.SDL_RenderFillRect(renderer, ref rect);
                     }
+
                 }
+            }
 
-                /* sdl fun, for reference
-
-
-                // Set the color to red before drawing our shape
-                SDL.SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-
-                // Draws a point at (20, 20) using the currently set color.
-                SDL.SDL_RenderDrawPoint(renderer, 20, 20);
+            /* sdl fun, for reference
 
 
-                // Draw a line from top left to bottom right
-                SDL.SDL_RenderDrawLine(renderer, 0, 0, 640, 480);
+            // Set the color to red before drawing our shape
+            SDL.SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 
-                // Specify the coordinates for our rectangle we will be drawing.
-                var rect = new SDL.SDL_Rect
-                {
-                    x = 300,
-                    y = 100,
-                    w = 50,
-                    h = 50
-                };
-
-                // Draw a filled in rectangle.
-                SDL.SDL_RenderFillRect(renderer, ref rect);
-                */
+            // Draws a point at (20, 20) using the currently set color.
+            SDL.SDL_RenderDrawPoint(renderer, 20, 20);
 
 
-                            // Switches out the currently presented render surface with the one we just did work on.
-                            SDL.SDL_RenderPresent(renderer);
+            // Draw a line from top left to bottom right
+            SDL.SDL_RenderDrawLine(renderer, 0, 0, 640, 480);
+
+            // Specify the coordinates for our rectangle we will be drawing.
+            var rect = new SDL.SDL_Rect
+            {
+                x = 300,
+                y = 100,
+                w = 50,
+                h = 50
+            };
+
+            // Draw a filled in rectangle.
+            SDL.SDL_RenderFillRect(renderer, ref rect);
+            */
 
 
-    
-		}
+            // Switches out the currently presented render surface with the one we just did work on.
+            SDL.SDL_RenderPresent(renderer);
+
+
+
+        }
 
 
         /// <summary>
@@ -422,26 +450,7 @@ namespace Chip8
             SDL.SDL_DestroyWindow(window);
             SDL.SDL_Quit();
         }
-       
-        [STAThread]
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Chip 8 Emulator Alpha by Flav900.");
-			Console.WriteLine("Follows the customary left side of the QWERTY controls");
-            Console.WriteLine("1,2,3,4,Q,W,E,R,A,S,D,F,Z,X,C");
 
-            //new Program();
+    }
 
-            // new MainForm().ShowDialog();
-            //  new FileRead();
-
-            //  new TextOnly();
-
-
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
-        }
-
-     }
 }
