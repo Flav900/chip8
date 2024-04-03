@@ -556,15 +556,11 @@ namespace Chip8
 
 					case 0xD:
 
-
 						CanDraw = true;
-
-						//Draw
 
 						 x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
 						 y = Convert.ToInt32(opCodeStr.Substring(2, 1), 16);
 
-						//char n = opCode[3];
 						int n = Convert.ToInt32(opCodeStr[3] + "", 16);
 
 
@@ -582,50 +578,25 @@ namespace Chip8
 						//	Console.WriteLine(" newX " + newX);
 						//	Console.WriteLine(" newY " + newY);
 
-						//Console.WriteLine( " n " + n);
-
-						//	Console.WriteLine(" index is " + index);
-
 
 						for (int rows = 0; rows < n; rows++)
 						{
-							//memory[index]
-
+						
 							byte spriteRow = memory[index + rows];
 
-							// Convert the byte to a binary string
 							//string binaryString = Convert.ToString(spriteRow, 2).PadLeft(8, '0');
-
-
-
-							//for (int col = 0; col < 8; col++)
-							//	{
-
-							//}
-
-
-
-							byte memoryValue = memory[index + n];
-
-							//Console.WriteLine("memoryValue " + memoryValue);
-							string binaryString = Convert.ToString(spriteRow, 2).PadLeft(8, '0');
 							//Console.WriteLine(binaryString);
-
-							string bits = binaryString.ToString();
 
 							newX = startNewX;
 
-							//will need to use bitwise operations here too instead of char spilt
-
-							foreach (char bit in bits)
+					
+							///left to right, from most to least significant bit
+							for (int i = 7; i >= 0; i--)
 							{
-								int number = int.Parse(bit.ToString());
-								//Console.WriteLine(number);
-
-								//	Console.WriteLine("newX" + newX);
-
-
-								if (number == 1)
+								//using byte shifting and bitwise to get individual bit
+								int bit = (spriteRow >> i) & 1;
+							
+								if (bit == 1)
 								{
 
 									if (display[newX, newY] == 1)
@@ -668,8 +639,6 @@ namespace Chip8
 							{
 								newY++;
 							}
-
-
 
 
 						}

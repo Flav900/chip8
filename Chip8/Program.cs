@@ -37,8 +37,8 @@ namespace Chip8
 
                 OpenFileDialog openFileDialog = new OpenFileDialog
                 {
-					// InitialDirectory = "C:\\Projects\\Chip8", //Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-					InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+				    InitialDirectory = "C:\\Projects\\Chip8", //Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+					//InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
 					Title = "Select a file",
                     Filter = "All files (*.*)|*.*",
                     RestoreDirectory = true
@@ -430,7 +430,7 @@ namespace Chip8
 			Console.WriteLine("Follows the customary left side of the QWERTY controls");
             Console.WriteLine("1,2,3,4,Q,W,E,R,A,S,D,F,Z,X,C");
 
-            //new Program();
+            new Program();
 
             // new MainForm().ShowDialog();
             //  new FileRead();
@@ -438,9 +438,9 @@ namespace Chip8
             //  new TextOnly();
 
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+           // Application.EnableVisualStyles();
+          //  Application.SetCompatibleTextRenderingDefault(false);
+          //  Application.Run(new MainForm());
         }
 
      }
