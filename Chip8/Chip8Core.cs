@@ -182,6 +182,7 @@ namespace Chip8
 
 						//Set the PC to nnn
 						nnn = opCodeStr.Substring(1);
+
 						if (DebugMode)
 						{
 							Console.WriteLine("Save the current Program Counter to Stack and it to " + nnn);
@@ -196,7 +197,9 @@ namespace Chip8
 
 					case 0x3:
 
-						x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+						x = (opCode >> 8) & 0xF;
+						//x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+						// 8 because its from right to left for the right shift
 
 						nn = opCodeStr.Substring(2);
 
@@ -218,7 +221,7 @@ namespace Chip8
 
 					case 0x4:
 
-						x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+						 x = (opCode >> 8) & 0xF;
 
 						nn = opCodeStr.Substring(2);
 
@@ -238,9 +241,9 @@ namespace Chip8
 
 					case 0x5:
 
-						x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+						 x = (opCode >> 8) & 0xF;
 
-						y = Convert.ToInt32(opCodeStr.Substring(2, 1), 16);
+						 y = (opCode >> 4) & 0xF;
 
 
 						if (DebugMode) Console.WriteLine("Will skip next instruction if V[" + x + "] equals " + "V[" + y + "]");
@@ -261,7 +264,7 @@ namespace Chip8
 
 					case 0x6:
 
-						x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+						 x = (opCode >> 8) & 0xF;
 
 						nn = opCodeStr.Substring(2);
 
@@ -278,7 +281,7 @@ namespace Chip8
 
 						//add value to register VX
 
-						x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+						 x = (opCode >> 8) & 0xF;
 
 						nn = opCodeStr.Substring(2);
 
@@ -307,9 +310,9 @@ namespace Chip8
 
 					case 0x8:
 						//8750
-						x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+						 x = (opCode >> 8) & 0xF;
 
-						y = Convert.ToInt32(opCodeStr.Substring(2, 1), 16);
+						y = (opCode >> 4) & 0xF;
 
 						int value = Convert.ToInt32(opCodeStr.Substring(3, 1), 16);
 
@@ -467,9 +470,9 @@ namespace Chip8
 
 					case 0x9:
 
-						x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+						 x = (opCode >> 8) & 0xF;
 
-						y = Convert.ToInt32(opCodeStr.Substring(2, 1), 16);
+						y = (opCode >> 4) & 0xF;
 
 
 						if (DebugMode) Console.WriteLine("Will skip next instruction if V[" + x + "] does not equal " + "V[" + y + "]");
@@ -518,7 +521,7 @@ namespace Chip8
 						{
 							nnn = opCodeStr.Substring(1);
 							jump = (ushort)Convert.ToInt32(nnn, 16);
-							x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+							 x = (opCode >> 8) & 0xF;
 
 							programCounter = (ushort)(cpuRegisters[x] + jump);
 
@@ -538,7 +541,7 @@ namespace Chip8
 					case 0xC:
 
 						//
-						x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+						 x = (opCode >> 8) & 0xF;
 						nn = opCodeStr.Substring(2);
 
 						if (DebugMode) Console.WriteLine("Generating Random Number to V["+x+"] & "+nn);
@@ -558,10 +561,10 @@ namespace Chip8
 
 						CanDraw = true;
 
-						 x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
-						 y = Convert.ToInt32(opCodeStr.Substring(2, 1), 16);
+						x = (opCode >> 8) & 0xF;
+						y = (opCode >> 4) & 0xF;
 
-						int n = Convert.ToInt32(opCodeStr[3] + "", 16);
+						int n = (opCode) & 0xF;
 
 
 						if (DebugMode) Console.WriteLine("Drawing " + n + " pixels long ");
@@ -647,7 +650,7 @@ namespace Chip8
 
 					case 0xF:
 
-						x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+						 x = (opCode >> 8) & 0xF;
 
 						int fvalue = Convert.ToInt32(opCodeStr.Substring(2, 2), 16);
 
@@ -809,7 +812,7 @@ namespace Chip8
 
 					case 0xE:
 
-						x = Convert.ToInt32(opCodeStr.Substring(1, 1), 16);
+						 x = (opCode >> 8) & 0xF;
 
 						int evalue = Convert.ToInt32(opCodeStr.Substring(2, 2), 16);
 
