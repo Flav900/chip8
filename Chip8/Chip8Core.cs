@@ -31,6 +31,8 @@ namespace Chip8
 		byte delayTimer = 0;
 		byte soundTimer =0;
 
+		bool invalidRom = false;
+
 
 		public bool CanDraw { get; set; }
 
@@ -108,6 +110,9 @@ namespace Chip8
 			//Console.WriteLine("PC: " + programCounter);
 			try
 			{
+
+				if (invalidRom) return;
+
 				//Fetch
 				byte[] chunk = { memory[programCounter], memory[programCounter + 1] };
 
@@ -910,12 +915,23 @@ namespace Chip8
 
 			byte[] rom = File.ReadAllBytes(filePath);
 
+			if(rom.Length > memory.Length)
+			{
+				Console.WriteLine("Rom Size bigger than 4kb, not a chip8 rom.");
+				invalidRom = true;
+			} else
+			{
+
+		
+
 			//load rom at 512
 			Array.Copy(rom, 0, memory, 512, rom.Length);
 
 
 			Console.WriteLine("Rom Size: " + rom.Length);
-			//Console.WriteLine("Memory Size: " + memory.Length+"\n");
+				//Console.WriteLine("Memory Size: " + memory.Length+"\n");
+
+			}
 
 		}
 
