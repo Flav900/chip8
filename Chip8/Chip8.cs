@@ -156,7 +156,7 @@ namespace Chip8
 
             // Create a new window given a title, size, and passes it a flag indicating it should be shown.
             window = SDL.SDL_CreateWindow(
-                "Chip8 Emulator",
+				"Chip8 Interpreter",
                 SDL.SDL_WINDOWPOS_UNDEFINED,
                 SDL.SDL_WINDOWPOS_UNDEFINED,
                 640,
