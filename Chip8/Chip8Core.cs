@@ -100,7 +100,7 @@ namespace Chip8
 		}
 
 
-		//Regex is nice but I think its too complex for this
+		//Regex is nice but I think its too complex for this (bad for performance too)
 		//Regex setIndexRegisterRegex = new Regex(@"^A[0-9A-F]{3}$", RegexOptions.IgnoreCase);
 		//	else if (setIndexRegisterRegex.IsMatch(hexString)) {
 
@@ -136,9 +136,10 @@ namespace Chip8
 				opCode = Convert.ToUInt16(opCodeStr, 16);
 
 
-				//So we would use bitwise operations to spilt the opcode into numbers easier
-				//It seems I have used that for the switch case but for the rest I'm using substrings which is not a really good idea for performance. 
-				//Note: 0xNumber is the number in hexadecimal format
+				// So we would use bitwise operations to spilt the opcode into numbers for decoding.
+				// It seems I have used that for some places but for the rest I'm using substrings which is not a really good idea for performance. 
+
+				// Note: 0xNumber is the number in hexadecimal format
 
 				//first number
 				int nibble = opCode >> 12;
