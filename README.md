@@ -7,7 +7,7 @@ A Chip-8 interpreter I made in C# and SDL2.
 
 Note: This emulator is not 100% perfect. 
 Audio does not work. It fails some of the flags test.
-Not all games work. 
+There's flickering. Not all games work. 
 
 I have moved onto coding other emulators. I may return someday to finish everything.
 
