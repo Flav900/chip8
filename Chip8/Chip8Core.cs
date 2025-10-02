@@ -136,8 +136,9 @@ namespace Chip8
 				opCode = Convert.ToUInt16(opCodeStr, 16);
 
 
-				//okay so we use the fancy bitwise operations to still have a switch statement 
-				//Note: 0xNumber to show it in hexadecimal
+				//So we would use bitwise operations to spilt the opcode into numbers easier
+				//It seems I have used that for the switch case but for the rest I'm using substrings which is not a really good idea for performance. 
+				//Note: 0xNumber is the number in hexadecimal format
 
 				//first number
 				int nibble = opCode >> 12;
